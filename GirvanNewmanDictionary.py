@@ -88,17 +88,16 @@ def runGirvanNewman(G, Orig_deg, m_):
             print("Identified components: {}".format(Bestcomps))
         if G.number_of_edges() == 0:
             break
-    if BestQ > 0.0:
-        print("Max modularity found (Q): {} and number of communities: {}".format(BestQ, len(Bestcomps)))
-        print("Graph communities: {}".format(Bestcomps))
-    else:
-        print("Max modularity (Q):", BestQ)
-    d=[]
-        
-    for com in nx.connected_components(G):
+#     if BestQ > 0.0:
+#         print("Max modularity found (Q): {} and number of communities: {}".format(BestQ, len(Bestcomps)))
+#         print("Graph communities: {}".format(Bestcomps))
+#     else:
+#         print("Max modularity (Q):", BestQ)
+    d={}
+    for i, com in enumerate(nx.connected_components(G)):
         for node in com:
-            d[node]=com
-    return (d)
+            d[node]=i
+    return d
             
     
 
