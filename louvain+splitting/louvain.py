@@ -133,6 +133,10 @@ class Louvain:
         max_community = 0
         for i, community in enumerate(communities):
             subgraph = (self.original_graph).subgraph(community)
+            if len(subgraph.nodes()) == 0 :
+                self.pre_split_communities[i] = i
+                max_community+=1
+                continue
             sub_community_map = self.splitting_func(subgraph)
             if len(sub_community_map) == len(sub_community_map.values()):
                 # not useful, ignore

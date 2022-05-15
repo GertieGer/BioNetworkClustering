@@ -5,8 +5,8 @@ import newmanGirvan
 import community_newman
 import time
 
-G = nx.karate_club_graph()
-#G = nx.read_edgelist(r"C:\Users\sabam\OneDrive - mail.tau.ac.il\Biological Networks\Benchmarks\Benchmarks\talya\edges.txt")
+#G = nx.karate_club_graph()
+G = nx.read_edgelist(r"C:\Users\sabam\OneDrive - mail.tau.ac.il\Biological Networks\Benchmarks\Benchmarks\LFRBenchmark\Graphs\1000_0.5_0\network.dat", nodetype=int)
 start = time.time()
 partition = detect_communities(G, splitting_func=newmanGirvan.newmanGirvan)
 end = time.time()
