@@ -132,7 +132,7 @@ class Louvain:
         self.pre_split_communities = {}
         max_community = 0
         for i, community in enumerate(communities):
-            if len(community)<4:
+            if len(community)<15:
                 #to small
                 for node in community:
                     community_map[node] = max_community
@@ -140,8 +140,6 @@ class Louvain:
                 max_community += 1
                 continue
             subgraph = (self.coarse_grain_graph).subgraph(community)
-            if len(subgraph.edges())==0: 
-                print("what")
             sub_community_map = self.splitting_func(subgraph)
             sub_count = len(set(sub_community_map.values()))
             if len(sub_community_map.keys()) == sub_count:

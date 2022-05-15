@@ -26,9 +26,12 @@ _DEBUG_ = False
 def CmtyGirvanNewmanStep(G):
     if _DEBUG_:
         print("Running CmtyGirvanNewmanStep method ...")
+    
     init_ncomp = nx.number_connected_components(G)    #no of components
     ncomp = init_ncomp
     while ncomp <= init_ncomp:
+        if G.number_of_edges() == 0:
+            break
         bw = nx.edge_betweenness_centrality(G, weight='weight')    #edge betweenness for G
         #find the edge with max centrality
         max_ = max(bw.values())
@@ -80,7 +83,8 @@ def runGirvanNewman(G, Orig_deg, m_):
     while True:
         if G.number_of_edges() == 0:
             break    
-        CmtyGirvanNewmanStep(G)
+        else:
+            CmtyGirvanNewmanStep(G)
         Q = _GirvanNewmanGetModularity(G, Orig_deg, m_);
         #print("Modularity of decomposed G: {}".format(Q))
         if Q > BestQ:
