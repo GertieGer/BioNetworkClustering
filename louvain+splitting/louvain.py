@@ -65,7 +65,7 @@ class Louvain:
         improved = True
         G = self.coarse_grain_graph
         if self.remerge == True:
-            self.tracker.initialize_network_statistics(G,pre_split_communities)
+            self.tracker.initialize_network_statistics(G,self.pre_split_communities)
         else:
             self.tracker.initialize_network_statistics(G)
 
@@ -132,25 +132,33 @@ class Louvain:
         self.pre_split_communities = {}
         max_community = 0
         for i, community in enumerate(communities):
-            subgraph = (self.original_graph).subgraph(community)
-            if len(subgraph.nodes()) == 0 :
-                self.pre_split_communities[i] = i
-                max_community+=1
+            if len(community)<4:
+                #to small
+                for node in community:
+                    community_map[node] = max_community
+                self.pre_split_communities[max_community] = i
+                max_community += 1
                 continue
+            subgraph = (self.coarse_grain_graph).subgraph(community)
+            if len(subgraph.edges())==0: 
+                print("what")
             sub_community_map = self.splitting_func(subgraph)
-            if len(sub_community_map) == len(sub_community_map.values()):
+            sub_count = len(set(sub_community_map.values()))
+            if len(sub_community_map.keys()) == sub_count:
                 # not useful, ignore
                 for node in sub_community_map:
-                    new_community = max_community + 0
-                    community_map[node] = new_community
-                    self.pre_split_communities[new_community] = i
+                    community_map[node] = max_community
+                self.pre_split_communities[max_community] = i
+                max_community += 1
             else:
                 for node, sub in sub_community_map.items():
                     new_community = max_community + sub
                     community_map[node] = new_community
                     self.pre_split_communities[new_community] = i
-
-            max_community += len(sub_community_map)
+                max_community += sub_count
+        if community_map == {0: 17, 1: 1, 2: 2, 3: 2, 4: 1, 5: 1, 6: 2, 7: 0, 8: 3, 9: 3, 10: 3, 11: 4, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 0, 18: 1, 19: 0}:
+            print("bad")
+        return
 
     def get_neighbour_communities(self, G, node, community_map):
         """Returns a dictionary with the neighbouring communities as keys and
@@ -203,6 +211,7 @@ class Louvain:
 
     def relabel_community_map(self, community_map):
         """Relabels communities to be from 0 to n."""
+        orig = community_map.copy()
         community_labels = set(community_map.values())
         new_pre_split_communities = {}
         relabelled_communities = {j: i for i, j in enumerate(community_labels)}
