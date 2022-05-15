@@ -1,5 +1,5 @@
 # Tested on NetworkX 1.11
-from .communitytracker import CommunityTracker
+from communitytracker import CommunityTracker
 
 import networkx as nx
 
@@ -26,7 +26,7 @@ class Louvain:
         # Final community map and list of communities created at end.
         self.community_map = None
         self.communities = None
-        self.splitting_func = None
+        self.splitting_func = splitting_func
         self.remerge = remerge
         self.pre_split_communities = None
 
@@ -34,13 +34,16 @@ class Louvain:
         """Runs the iterations of the Louvain method until finished then
         generates the final community map.
         """
+        i = 0
         while not self.finished:
             self.iterate()
+            i+=1
         if self.verbose:
             print("Finished in {} iterations".format(self.iteration_count))
         self.community_map = self.generate_community_map(
             self.community_history)
         self.communities = self.invert_community_map(self.community_map)
+        print("num of iterations: ", i)
 
     def iterate(self):
         """Performs one iteration of the Louvain method on the current graph G.
@@ -67,8 +70,8 @@ class Louvain:
             self.tracker.initialize_network_statistics(G)
 
         community_map = self.tracker.node_to_community_map
-        if self.pre_split_communities!=None:
-            self.remerge_sub_communities(community_map)
+        # if self.pre_split_communities!=None:
+        #     self.remerge_sub_communities(community_map)
 
         while improved:
             improved = False
@@ -109,10 +112,10 @@ class Louvain:
                     modified = True
 
         if modified:
-            # if self.splitting_func != None:
+            if self.splitting_func != None:
                 # split community_map 
-                # self.communities = self.invert_community_map(self.community_map)
-                # self.split_communities(self.communities, community_map) # makes changes in community_map
+                self.communities = self.invert_community_map(community_map)
+                self.split_communities(self.communities, community_map) # makes changes in community_map
             self.relabel_community_map(community_map)
             self.community_history.append(community_map)
             self.coarse_grain_graph = self.generate_coarse_grain_graph(
@@ -129,15 +132,21 @@ class Louvain:
         self.pre_split_communities = {}
         max_community = 0
         for i, community in enumerate(communities):
-            subgraph = G.subgraph(community)
+            subgraph = (self.original_graph).subgraph(community)
             sub_community_map = self.splitting_func(subgraph)
-            for node, sub in sub_community_map.items():
-                new_community = max_community + sub
-                community_map[node] = new_community
-                pre_split_communities[new_community] = i
+            if len(sub_community_map) == len(sub_community_map.values()):
+                # not useful, ignore
+                for node in sub_community_map:
+                    new_community = max_community + 0
+                    community_map[node] = new_community
+                    self.pre_split_communities[new_community] = i
+            else:
+                for node, sub in sub_community_map.items():
+                    new_community = max_community + sub
+                    community_map[node] = new_community
+                    self.pre_split_communities[new_community] = i
 
             max_community += len(sub_community_map)
-
 
     def get_neighbour_communities(self, G, node, community_map):
         """Returns a dictionary with the neighbouring communities as keys and
@@ -179,7 +188,7 @@ class Louvain:
         for community in set(community_map.values()):
             new_graph.add_node(community)
         # Create the combined edges from the individual old edges.
-        for u, v, w in G.edges_iter(data="weight", default=1):
+        for u, v, w in G.edges(data="weight", default=1):
             c1 = community_map[u]
             c2 = community_map[v]
             new_weight = w
@@ -198,7 +207,7 @@ class Louvain:
             community_map[node] = relabelled_communities[community]
             if self.pre_split_communities!=None:
                 new_pre_split_communities[relabelled_communities[community]] = \
-                    pre_split_communities[community]
+                    self.pre_split_communities[community]
         
         if self.pre_split_communities!=None:
             self.pre_split_communities = new_pre_split_communities
