@@ -75,11 +75,6 @@ for i in range(num_of_benchmarks):
             f = open(fpath, "a")
             ## NORMAL LOUVAIN
             print(network+"## NORMAL LOUVAIN")
-            start = time.time()
-            comms, dic = louvain.detect_communities(G)
-            end = time.time()
-            time_ = str(end - start)
-            write_result(f, network, "normal louvain", time_, comms, dic, real_comms)
             try:
                 start = time.time()
                 comms, dic = louvain.detect_communities(G)
