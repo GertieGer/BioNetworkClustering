@@ -133,3 +133,34 @@ def newmanGirvan(G):
 
 #if __name__ == "__main__":
    # sys.exit(main(sys.argv))
+
+def arr_to_dic(arr):
+    d={}
+    for i, com in enumerate(arr):
+        for node in com:
+            d[node]=i
+    return d
+
+def networkxMaxModularity(G):
+    comps = nx.girvan_newman(G)
+    max_step = 0
+    max_mod = 0
+    for i in range(len(comp)):
+        mod = evaluation.mod(G, comp[i])
+        if mod>max_mod:
+            max_mod = mod
+            max_step = i
+    
+    return arr_to_dic(comp[max_step])
+    
+def networkxMaxConductance(G):
+    comps = nx.girvan_newman(G)
+    max_step = 0
+    max_cond = 0
+    for i in range(len(comp)):
+        cond = evaluation.cond(G, comp[i])
+        if cond>max_cond:
+            max_cond = cond
+            max_step = i
+    
+    return arr_to_dic(comp[max_step])

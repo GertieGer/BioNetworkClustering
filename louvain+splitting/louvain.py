@@ -43,7 +43,7 @@ class Louvain:
         self.community_map = self.generate_community_map(
             self.community_history)
         self.communities = self.invert_community_map(self.community_map)
-        print("num of iterations: ", i)
+        #print("num of iterations: ", i)
 
     def iterate(self):
         """Performs one iteration of the Louvain method on the current graph G.
@@ -252,4 +252,9 @@ def detect_communities(G, verbose=False, randomized=False, splitting_func=None, 
     """
     louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=splitting_func, remerge=remerge)
     louvain.run()
-    return louvain.communities
+    return louvain.communities, louvain.community_map
+
+def louvainfunc(G, verbose=False, randomized=False, splitting_func=None, remerge=False):
+    louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=splitting_func, remerge=remerge)
+    louvain.run()
+    return louvain.community_map

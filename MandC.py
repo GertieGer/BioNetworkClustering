@@ -10,7 +10,8 @@ def mod(G,arr):
 def cond(G,arr):
     q=0
     for A in arr:
-        T=arr.pop(A)
+        #T=arr.pop(A)
+        T=G.nodes()-A
         q+=nx_comm.conductance(G,A,T)
     res=q/len(arr)
     res=1-res
