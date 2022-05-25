@@ -5,12 +5,14 @@ import louvain
 import newmanGirvan
 import community_newman
 import time
-from datetime import date
+from datetime import datetime
 import evaluation
 
 
-# #G = nx.karate_club_graph()
-# G = nx.read_edgelist(r"C:\Users\sabam\OneDrive - mail.tau.ac.il\Biological Networks\Benchmarks\Benchmarks\LFRBenchmark\Graphs\1000_0.5_0\network.dat", nodetype=int)
+# G = nx.karate_club_graph()
+# comms, dic = louvain.detect_communities(G, splitting_func=louvain.louvainfunc, remerge=True)
+# exit()              
+# # G = nx.read_edgelist(r"C:\Users\sabam\OneDrive - mail.tau.ac.il\Biological Networks\Benchmarks\Benchmarks\LFRBenchmark\Graphs\1000_0.5_0\network.dat", nodetype=int)
 
 # start = time.time()
 # partition = detect_communities(G, splitting_func=newmanGirvan.newmanGirvan, remerge=False)
@@ -31,11 +33,12 @@ import evaluation
 n_vals=(100, 1000)
 mu_vals=(0.4, 0.5, 0.6) 
 num_of_benchmarks=1
-today = date.today()
-dt_string = today.strftime("%d_%m_%Y")
+now = datetime.now()
+dt_string = now.strftime("%m_%d_%Y__%H_%M")
 fpath = r"C:\Users\sabam\OneDrive - mail.tau.ac.il\Biological Networks\out_file - "+dt_string+".csv"
 f = open(fpath, "w")
 f.write("network,method,time,modularity,cunductance,accurary")
+f.write("\n");
 f.close()
 
 
@@ -47,6 +50,7 @@ def write_result(f, network, method, time_, comms, Y, X):
     cunductance = str(evaluation.cond(G, comms))
     accurary = str(evaluation.jaccard(X, Y))
     f.write(",".join([network,method,time_,modularity,cunductance,accurary]))
+    f.write("\n");
 
 def get_comms_from_dic(community_map):
     inverted_community_map = defaultdict(list)
@@ -84,6 +88,7 @@ for i in range(num_of_benchmarks):
             except:
                 print("FAILED")
                 f.write(network+",normal louvain,FAILED,FAILED,FAILED,FAILED")
+                f.write("\n");
             f.close()
 
             # ## NORMAL NEWMAN
@@ -98,6 +103,7 @@ for i in range(num_of_benchmarks):
             # except:
             #     print("FAILED")
             #     f.write(network+",normal louvain,FAILED,FAILED,FAILED,FAILED")
+            #     f.write("\n");
             
             f = open(fpath, "a")
             ## SPLIT LOUVAIN NO REMERERGE
@@ -109,7 +115,9 @@ for i in range(num_of_benchmarks):
                 time_ = str(end - start)
                 write_result(f, network, "split_louvain", time_, comms, dic, real_comms)
             except:
+                print("FAILED")
                 f.write(network+",split_louvain,FAILED,FAILED,FAILED,FAILED")
+                f.write("\n");
 
             f.close()
             f = open(fpath, "a")
@@ -124,6 +132,7 @@ for i in range(num_of_benchmarks):
             except:
                 print("FAILED")
                 f.write(network+",split_louvain_remerge,FAILED,FAILED,FAILED,FAILED")
+                f.write("\n");
                 
             f.close()
             f = open(fpath, "a")
@@ -138,6 +147,7 @@ for i in range(num_of_benchmarks):
             except:
                 print("FAILED")
                 f.write(network+",split_girvan,FAILED,FAILED,FAILED,FAILED")
+                f.write("\n");
                 
             f.close()
             f = open(fpath, "a")
@@ -152,6 +162,7 @@ for i in range(num_of_benchmarks):
             except:
                 print("FAILED")
                 f.write(network+",split_girvan_remerge,FAILED,FAILED,FAILED,FAILED")
+                f.write("\n");
                                 
             f.close()
             f = open(fpath, "a")
@@ -166,6 +177,7 @@ for i in range(num_of_benchmarks):
             except:
                 print("FAILED")
                 f.write(network+",split_newman,FAILED,FAILED,FAILED,FAILED")
+                f.write("\n");
                                
             f.close() 
             f = open(fpath, "a")
@@ -180,6 +192,7 @@ for i in range(num_of_benchmarks):
             except:
                 print("FAILED")
                 f.write(network+",split_newman_remerge,FAILED,FAILED,FAILED,FAILED")
+                f.write("\n");
 
             # ## SPLIT NX.GIRVAN_MOD NO REMERERGE
             # print(network+"## SPLIT NX.GIRVAN_MOD NO REMERERGE")
@@ -192,6 +205,7 @@ for i in range(num_of_benchmarks):
             # except:
             #     print("FAILED")
             #     f.write(network+",split_nx.girvan_mod,FAILED,FAILED,FAILED,FAILED")
+            #     f.write("\n");
 
             # ## SPLIT NX.GIRVAN_MOD WITH REMERERGE
             # print(network+"## SPLIT NX.GIRVAN_MOD WITH REMERERGE")
@@ -204,6 +218,7 @@ for i in range(num_of_benchmarks):
             # except:
             #     print("FAILED")
             #     f.write(network+",split_nx.girvan_mod_remerge,FAILED,FAILED,FAILED,FAILED")
+            #     f.write("\n");
 
             # ## SPLIT NX.GIRVAN_CON NO REMERERGE
             # print(network+"## SPLIT NX.GIRVAN_CON NO REMERERGE")
@@ -216,6 +231,7 @@ for i in range(num_of_benchmarks):
             # except:
             #     print("FAILED")
             #     f.write(network+",split_nx.girvan_con,FAILED,FAILED,FAILED,FAILED")
+            #     f.write("\n");
 
             # ## SPLIT NX.GIRVAN_CON WITH REMERERGE
             # print(network+"## SPLIT NX.GIRVAN_CON WITH REMERERGE")
@@ -228,9 +244,11 @@ for i in range(num_of_benchmarks):
             # except:
             #     print("FAILED")
             #     f.write(network+",split_nx.girvan_con_remerge,FAILED,FAILED,FAILED,FAILED")
+            #     f.write("\n");
                 
             f = open(fpath, "a")
             f.write("***,***,***,***,***,***")
+            f.write("\n");
             f.close()
 
 f.close()       

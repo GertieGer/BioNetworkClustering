@@ -64,14 +64,14 @@ class Louvain:
         modified = False
         improved = True
         G = self.coarse_grain_graph
-        if self.remerge == True:
-            self.tracker.initialize_network_statistics(G,self.pre_split_communities)
-        else:
-            self.tracker.initialize_network_statistics(G)
+        self.tracker.initialize_network_statistics(G)
+        
 
         community_map = self.tracker.node_to_community_map
         # if self.pre_split_communities!=None:
         #     self.remerge_sub_communities(community_map)
+        if self.remerge:
+            self.remerge_communities(community_map)
 
         while improved:
             improved = False
@@ -124,19 +124,86 @@ class Louvain:
             # We didn't modify any nodes so we are finished.
             self.finished = True
 
+    def remerge_communities(self, community_map):
+        # maybe not the most efficient but this uses used code to remerge the nodes
+        if not self.pre_split_communities:
+            return # nothing to remerge yet
+
+        G = self.coarse_grain_graph
+        nodes = G.nodes()
+        head_of_pre_community= {}
+
+        for node in nodes:
+            curr_community = community_map[node]
+            new_community = curr_community
+            neighbour_communities = self.get_neighbour_communities(
+                G, node, community_map)
+            # Isolate the current node and find the best neighbouring
+            # community (including checking the original).
+            old_incident_weight = neighbour_communities.get(
+                curr_community, 0)
+            self.tracker.remove(node, curr_community, old_incident_weight)
+            
+            pre_community = self.pre_split_communities[node]
+            if pre_community in head_of_pre_community:
+                new_community = community_map[head_of_pre_community[pre_community]] 
+                # if pre communitiy has a node that represents it, ass this node to the cimmounity of that node
+            else:
+                # else, make this node the "head" that represents the pre-community
+                head_of_pre_community[pre_community] = node
+
+            # Move to the best community and check if we actually improved.
+            new_incident_weight = neighbour_communities[new_community]
+            self.tracker.insert(node, new_community, new_incident_weight)
+            if self.verbose:
+                message = "Moved node {} from community {} to community {}"
+                print(message.format(node, curr_community, new_community))
+
+    def reorder_communities(self, new_community_map, community_map):
+        # maybe not the most efficient but this uses used code to remerge the nodes
+        # after running the splitting function, community_map now holds a new way to cluster the nodes
+        # however editing the community_map isn't enough, we need to actualy move the nodes to where they belong
+        # so this function does that, moves nodes to theyer new location 
+
+        G = self.coarse_grain_graph
+        nodes = G.nodes()
+
+        self.pre_split_communities = {}
+        head_of_community= {}
+        for node in nodes:
+            curr_community = community_map[node]
+            suggested_comm = new_community_map[node]
+            if not suggested_comm in head_of_community:
+                home = self.tracker.home_community_map[node]
+                head_of_community[suggested_comm] = home # the original home of this node will be the new community for this node's sub
+                self.pre_split_communities[home] = curr_community # so we know this new sub community once belonged to curr_community, which holds the community that louvain iteration found
+            new_community = head_of_community[suggested_comm] 
+
+            neighbour_communities = self.get_neighbour_communities(
+                G, node, community_map)
+            # Isolate the current node and find the best neighbouring
+            # community (including checking the original).
+            old_incident_weight = neighbour_communities.get(
+                curr_community, 0)
+            self.tracker.remove(node, curr_community, old_incident_weight)
+
+            # Move to the best community and check if we actually improved.
+            new_incident_weight = neighbour_communities[new_community]
+            self.tracker.insert(node, new_community, new_incident_weight)
+
     def split_communities(self, communities, community_map):
         """by us:
         Applies a divisive clustering algorithm on the subgraph defined by each community.
-        this may cause the community to sub communities.
+        this may split the community to sub communities.
         """
-        self.pre_split_communities = {}
+        
         max_community = 0
+        new_community_map = community_map.copy()
         for i, community in enumerate(communities):
-            if len(community)<15:
+            if len(community)<10: ## CHANGED FOR DEBUGING ##
                 #to small
                 for node in community:
-                    community_map[node] = max_community
-                self.pre_split_communities[max_community] = i
+                    new_community_map[node] = max_community
                 max_community += 1
                 continue
             subgraph = (self.coarse_grain_graph).subgraph(community)
@@ -145,17 +212,18 @@ class Louvain:
             if len(sub_community_map.keys()) == sub_count:
                 # not useful, ignore
                 for node in sub_community_map:
-                    community_map[node] = max_community
-                self.pre_split_communities[max_community] = i
+                    new_community_map[node] = max_community
                 max_community += 1
+                continue
+
             else:
                 for node, sub in sub_community_map.items():
                     new_community = max_community + sub
-                    community_map[node] = new_community
-                    self.pre_split_communities[new_community] = i
+                    new_community_map[node] = new_community
                 max_community += sub_count
-        if community_map == {0: 17, 1: 1, 2: 2, 3: 2, 4: 1, 5: 1, 6: 2, 7: 0, 8: 3, 9: 3, 10: 3, 11: 4, 12: 4, 13: 4, 14: 4, 15: 5, 16: 5, 17: 0, 18: 1, 19: 0}:
-            print("bad")
+
+        # after finding splitting dictionary, acctualy split the nodes
+        self.reorder_communities(new_community_map, community_map)
         return
 
     def get_neighbour_communities(self, G, node, community_map):
@@ -219,6 +287,7 @@ class Louvain:
             if self.pre_split_communities!=None:
                 new_pre_split_communities[relabelled_communities[community]] = \
                     self.pre_split_communities[community]
+                
         
         if self.pre_split_communities!=None:
             self.pre_split_communities = new_pre_split_communities
@@ -255,6 +324,6 @@ def detect_communities(G, verbose=False, randomized=False, splitting_func=None, 
     return louvain.communities, louvain.community_map
 
 def louvainfunc(G, verbose=False, randomized=False, splitting_func=None, remerge=False):
-    louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=splitting_func, remerge=remerge)
+    louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=None, remerge=remerge)
     louvain.run()
     return louvain.community_map

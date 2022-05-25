@@ -10,9 +10,11 @@ class CommunityTracker:
         self.self_loops = None
         self.community_degrees = None
         self.community_self_loops = None
+        self.home_community_map = None
 
-    def initialize_network_statistics(self, G, pre_split_communities=None):
+    def initialize_network_statistics(self, G):
         self.node_to_community_map = {}
+        self.home_community_map = {}
         self.m = G.size(weight="weight")
         self.degrees = {}
         self.self_loops = {}
@@ -22,9 +24,8 @@ class CommunityTracker:
         self.community_self_loops = {}
         # Initialize all nodes in separate communities.
         for community, node in enumerate(G):
-            if pre_split_communities!=None:
-                community = pre_split_communities[node]
             self.node_to_community_map[node] = community
+            self.home_community_map[node] = community
             degree = G.degree(node, weight="weight")
             self.degrees[node] = self.community_degrees[community] = degree
             self_loop = 0
