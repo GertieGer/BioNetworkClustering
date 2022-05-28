@@ -47,12 +47,10 @@ class Louvain:
 
     def iterate(self):
         """Performs one iteration of the Louvain method on the current graph G.
-
         For each node we move it to a neighbouring community which causes the
         greatest increase in modularity (if there is no such positive change we
         leave it where it is). We continue this until no more moves can be done
         so we have reached a local modularity optimum.
-
         We then create a new coarse grained graph where each node represents a
         community for the next iteration.
         """
@@ -65,11 +63,12 @@ class Louvain:
         improved = True
         G = self.coarse_grain_graph
         self.tracker.initialize_network_statistics(G)
+        # name = "girvan_"+str(self.iteration_count) if self.splitting_func else "louvain_"+str(self.iteration_count)
+        # gpath = "C:\\Users\\sabam\\OneDrive - mail.tau.ac.il\\Biological Networks\\"+name+".edges"
+        # nx.write_weighted_edgelist(G, gpath)
         
 
         community_map = self.tracker.node_to_community_map
-        # if self.pre_split_communities!=None:
-        #     self.remerge_sub_communities(community_map)
         if self.remerge:
             self.remerge_communities(community_map)
 
@@ -256,7 +255,6 @@ class Louvain:
     def generate_coarse_grain_graph(self, G, community_map):
         """Generates new coarse grain graph with each community as a single
         node.
-
         Weights between nodes are the sum of all weights between respective
         communities and self loops are added for the weights of he internal
         edges.
@@ -314,7 +312,6 @@ class Louvain:
 def detect_communities(G, verbose=False, randomized=False, splitting_func=None, remerge=False):
     """Returns the detected communities as a list of lists of nodes
     representing each community.
-
     Uses the Louvain heuristic from:
         Blondel, V.D. et al. Fast unfolding of communities in
     large networks. J. Stat. Mech 10008, 1 - 12(2008).

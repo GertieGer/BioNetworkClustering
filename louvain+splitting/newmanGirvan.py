@@ -3,6 +3,8 @@ import math
 import csv
 import random as rand
 import sys
+from networkx.algorithms.community.centrality import girvan_newman
+import evaluation
 
 _DEBUG_ = False
 
@@ -142,25 +144,25 @@ def arr_to_dic(arr):
     return d
 
 def networkxMaxModularity(G):
-    comps = nx.girvan_newman(G)
-    max_step = 0
-    max_mod = 0
-    for i in range(len(comp)):
-        mod = evaluation.mod(G, comp[i])
+    comps = girvan_newman(G)
+    max_comp = None
+    max_mod = -1
+    for comp in comps:
+        mod = evaluation.mod(G, comp)
         if mod>max_mod:
             max_mod = mod
-            max_step = i
+            max_comp = comp
     
-    return arr_to_dic(comp[max_step])
+    return arr_to_dic(max_comp)
     
 def networkxMaxConductance(G):
-    comps = nx.girvan_newman(G)
-    max_step = 0
-    max_cond = 0
-    for i in range(len(comp)):
-        cond = evaluation.cond(G, comp[i])
+    comps = girvan_newman(G)
+    max_comp = None
+    max_cond = -1
+    for comp in comps:
+        cond = evaluation.cond(G, comp)
         if cond>max_cond:
             max_cond = cond
-            max_step = i
+            max_comp = comp
     
-    return arr_to_dic(comp[max_step])
+    return arr_to_dic(max_comp)
