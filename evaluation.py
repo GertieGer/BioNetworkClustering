@@ -1,5 +1,3 @@
-
-
 import networkx.algorithms.community as nx_comm
 import networkx as nx
 
