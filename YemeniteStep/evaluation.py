@@ -2,10 +2,27 @@ import networkx.algorithms.community as nx_comm
 import networkx as nx
 
 
-def mod(G,arr):
-    m=nx_comm.modularity(G,arr)
+# Modularity ## TODO: Delete, useless
+def modularity(G,arr):
+    m=nx_comm.modularity(G,arr) 
     return m
 
+# Modularity
+def relative_modularity(G, partition, m, k):
+    Q = 0
+    for community in partition:
+        for u, v in product(community, repeat=2):
+            try:
+                w = G[u][v].get("weight", 1)
+            except KeyError:
+                w = 0
+            if u == v:
+                # Double count self-loop weight.
+                w *= 2
+            Q += w - k[u] * k[v] / (2 * m)
+    return Q / (2 * m)
+
+# Conductance
 def cond(G,arr):
     q=0
     for A in arr:
@@ -16,8 +33,8 @@ def cond(G,arr):
     res=1-res
     return res
         
-
-def acc(G,arr):
+# Accurracy
+def acc(G,arr): # TODO: check if correct...
     m=0
     N=0
     I=0
@@ -40,7 +57,7 @@ def acc(G,arr):
     res=res**0.5
     return res
 
-
+# Jaccard
 def jaccard(X, Y):
     """ X - known solution, Y - suggested"""
     N11 = 0 # same cluster in both
@@ -66,7 +83,12 @@ def jaccard(X, Y):
 
     return N11/(N10+N01+N11)
 
-
+def arr_to_dic(arr):
+    d={}
+    for i, com in enumerate(arr):
+        for node in com:
+            d[node]=i
+    return d
 
         
         

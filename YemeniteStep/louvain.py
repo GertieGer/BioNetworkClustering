@@ -1,23 +1,28 @@
-# Tested on NetworkX 1.11
 from communitytracker import CommunityTracker
-
 import networkx as nx
-
-from collections import defaultdict
+from collections import defaultdict # TODO: remove, annoying
 import random
+import splitting_functions
 
 
-class Louvain:
+class Louvain: 
 
-    def __init__(self, G, verbose=False, randomized=False, splitting_func=None, remerge=False):
+    def __init__(self, G, splitting_func=None, verbose=False, randomized=False, remerge=False, relative=False):
         # SETTINGS
+        self.splitting_func = splitting_func
         self.verbose = verbose
         self.randomized = randomized
+        self.remerge = remerge
+        self.pre_split_communities = None
+        self.relative = relative
         # Create helper to track network statistics.
         # We use the coarse_grain_graph in the iterations.
         self.tracker = CommunityTracker()
         self.original_graph = G
         self.coarse_grain_graph = G
+        # If this is running on a subgraph, these may be useful (when using 'relative' option)
+        self.relative_ks = None
+        self.relative_m = None
         # self.community_history keeps track of the community maps
         # from each iteration.
         self.community_history = []
@@ -26,10 +31,7 @@ class Louvain:
         # Final community map and list of communities created at end.
         self.community_map = None
         self.communities = None
-        self.splitting_func = splitting_func
-        self.remerge = remerge
-        self.pre_split_communities = None
-
+        
     def run(self):
         """Runs the iterations of the Louvain method until finished then
         generates the final community map.
@@ -43,7 +45,6 @@ class Louvain:
         self.community_map = self.generate_community_map(
             self.community_history)
         self.communities = self.invert_community_map(self.community_map)
-        #print("num of iterations: ", i)
 
     def iterate(self):
         """Performs one iteration of the Louvain method on the current graph G.
@@ -62,20 +63,25 @@ class Louvain:
         modified = False
         improved = True
         G = self.coarse_grain_graph
-        self.tracker.initialize_network_statistics(G)
-        # name = "girvan_"+str(self.iteration_count) if self.splitting_func else "louvain_"+str(self.iteration_count)
-        # gpath = "C:\\Users\\sabam\\OneDrive - mail.tau.ac.il\\Biological Networks\\"+name+".edges"
-        # nx.write_weighted_edgelist(G, gpath)
-        
 
+        # Relative Option 
+        if self.relative_k is not None: # if k is given, meaning I am a subgraph
+            self.tracker.initialize_network_statistics(G, self.relative_m, self.relative_k)
+        else:
+            self.tracker.initialize_network_statistics(G)
         community_map = self.tracker.node_to_community_map
+
+        # Remerging Option
         if self.remerge:
             self.remerge_communities(community_map)
-
+ 
+        # Iteration
         while improved:
             improved = False
 
             nodes = G.nodes()
+
+            # Random Option
             if self.randomized:
                 nodes = list(G.nodes())
                 random.seed()
@@ -85,13 +91,20 @@ class Louvain:
                 best_delta_Q = 0.0
                 old_community = community_map[node]
                 new_community = old_community
+                
                 neighbour_communities = self.get_neighbour_communities(
-                    G, node, community_map)
+                    G, node, community_map) # Dict: {community:sum_of_weihgts_of_edges_to_community}
+
                 # Isolate the current node and find the best neighbouring
                 # community (including checking the original).
+                
                 old_incident_weight = neighbour_communities.get(
-                    old_community, 0)
+                    old_community, 0) # incident_weight = sum_of_weihgts_of_edges_to_community
+
+                # Remove node from current community
                 self.tracker.remove(node, old_community, old_incident_weight)
+
+                # Try adding node to neighbor communities
                 for community, incident_wt in neighbour_communities.items():
                     delta_Q = self.calculate_delta_Q(
                         G, node, community, incident_wt)
@@ -109,14 +122,21 @@ class Louvain:
                 if new_community != old_community:
                     improved = True
                     modified = True
-
+            # End node loop
+            
+        # After no improvment has been made
         if modified:
-            if self.splitting_func != None:
-                # split community_map 
+
+            # Splitting function option
+                # After Louvain's shot at finding communities, 
+                # run a clustering method in each community to possibly split it even more
+            if self.splitting_func is not None:
                 self.communities = self.invert_community_map(community_map)
-                self.split_communities(self.communities, community_map) # makes changes in community_map
-            self.relabel_community_map(community_map)
+                self.split_communities(self.communities, community_map)
+
+            self.relabel_community_map(community_map) # relabe remaining communities from 0,1..n
             self.community_history.append(community_map)
+            # Generate new graph where each community is a node
             self.coarse_grain_graph = self.generate_coarse_grain_graph(
                 G, community_map)
         else:
@@ -124,7 +144,13 @@ class Louvain:
             self.finished = True
 
     def remerge_communities(self, community_map):
-        # maybe not the most efficient but this uses used code to remerge the nodes
+        """
+            Remerge Option:
+            If the remerge option is on, sub-communities that used to be part of the same community
+            (before running the internal spiltting functio) will be remerged so that they still
+            become independent nodes in the coarse graph, but they will belong to same community 
+            (as opposed to the usual "each node is it's own community")
+        """
         if not self.pre_split_communities:
             return # nothing to remerge yet
 
@@ -133,16 +159,19 @@ class Louvain:
         head_of_pre_community= {}
 
         for node in nodes:
+            # Since we are changing the communities of the nodes, we need to do it
+            # in such a way the the community tracker is updated correctly
+
+            # Remove node from  its current community
             curr_community = community_map[node]
             new_community = curr_community
             neighbour_communities = self.get_neighbour_communities(
                 G, node, community_map)
-            # Isolate the current node and find the best neighbouring
-            # community (including checking the original).
             old_incident_weight = neighbour_communities.get(
                 curr_community, 0)
             self.tracker.remove(node, curr_community, old_incident_weight)
             
+            # Add node to the merged community
             pre_community = self.pre_split_communities[node]
             if pre_community in head_of_pre_community:
                 new_community = community_map[head_of_pre_community[pre_community]] 
@@ -151,19 +180,58 @@ class Louvain:
                 # else, make this node the "head" that represents the pre-community
                 head_of_pre_community[pre_community] = node
 
-            # Move to the best community and check if we actually improved.
             new_incident_weight = neighbour_communities[new_community]
             self.tracker.insert(node, new_community, new_incident_weight)
             if self.verbose:
                 message = "Moved node {} from community {} to community {}"
                 print(message.format(node, curr_community, new_community))
 
-    def reorder_communities(self, new_community_map, community_map):
-        # maybe not the most efficient but this uses used code to remerge the nodes
-        # after running the splitting function, community_map now holds a new way to cluster the nodes
-        # however editing the community_map isn't enough, we need to actualy move the nodes to where they belong
-        # so this function does that, moves nodes to theyer new location 
+    def split_communities(self, communities, community_map):
+        """
+        Applies a divisive clustering algorithm on the subgraph defined by each community
+        in "communities" list. this may split the community to sub communities.
+        """
+        max_community = 0
+        new_community_map = community_map.copy()
+        for i, community in enumerate(communities):
+            if len(community)<10: ## CHANGED FOR DEBUGING ##
+                #to small
+                for node in community:
+                    new_community_map[node] = max_community
+                max_community += 1
+                continue
+            subgraph = (self.coarse_grain_graph).subgraph(community)
 
+            if self.relative:
+                # Please use the "relative" flag only if splitting_func supports that options
+                sub_community_map = self.splitting_func(subgraph, self.tracker.m, self.tracker.degrees)
+            else:
+                sub_community_map = self.splitting_func(subgraph)
+
+            sub_count = len(set(sub_community_map.values()))
+            if len(sub_community_map.keys()) == sub_count:
+                # not useful, ignore
+                for node in sub_community_map:
+                    new_community_map[node] = max_community
+                max_community += 1
+                continue
+
+            else:
+                for node, sub in sub_community_map.items():
+                    new_community = max_community + sub
+                    new_community_map[node] = new_community
+                max_community += sub_count
+
+        # after finding splitting dictionary, acctualy split the nodes
+        self.reorder_communities(new_community_map, community_map)
+    
+    def reorder_communities(self, new_community_map, community_map):
+        """
+        This function is called at the end of split_communities().
+        After running the splitting function, community_map now holds a new way to cluster the nodes.
+        In this function we move the nodes to the communities suggested in the community_map,
+        in a way that updates the community tracker.
+        """
         G = self.coarse_grain_graph
         nodes = G.nodes()
 
@@ -189,41 +257,6 @@ class Louvain:
             # Move to the best community and check if we actually improved.
             new_incident_weight = neighbour_communities[new_community]
             self.tracker.insert(node, new_community, new_incident_weight)
-
-    def split_communities(self, communities, community_map):
-        """by us:
-        Applies a divisive clustering algorithm on the subgraph defined by each community.
-        this may split the community to sub communities.
-        """
-        
-        max_community = 0
-        new_community_map = community_map.copy()
-        for i, community in enumerate(communities):
-            if len(community)<10: ## CHANGED FOR DEBUGING ##
-                #to small
-                for node in community:
-                    new_community_map[node] = max_community
-                max_community += 1
-                continue
-            subgraph = (self.coarse_grain_graph).subgraph(community)
-            sub_community_map = self.splitting_func(subgraph)
-            sub_count = len(set(sub_community_map.values()))
-            if len(sub_community_map.keys()) == sub_count:
-                # not useful, ignore
-                for node in sub_community_map:
-                    new_community_map[node] = max_community
-                max_community += 1
-                continue
-
-            else:
-                for node, sub in sub_community_map.items():
-                    new_community = max_community + sub
-                    new_community_map[node] = new_community
-                max_community += sub_count
-
-        # after finding splitting dictionary, acctualy split the nodes
-        self.reorder_communities(new_community_map, community_map)
-        return
 
     def get_neighbour_communities(self, G, node, community_map):
         """Returns a dictionary with the neighbouring communities as keys and
@@ -258,11 +291,15 @@ class Louvain:
         Weights between nodes are the sum of all weights between respective
         communities and self loops are added for the weights of he internal
         edges.
+        In case G is a subgraph of some bigger graph, k_i may not be equal to degree, so ks are also calaulated.
         """
         new_graph = nx.Graph()
+        new_ks = {}
         # Create nodes for each community.
         for community in set(community_map.values()):
             new_graph.add_node(community)
+            new_ks[community] = 0
+
         # Create the combined edges from the individual old edges.
         for u, v, w in G.edges(data="weight", default=1):
             c1 = community_map[u]
@@ -271,6 +308,13 @@ class Louvain:
             if new_graph.has_edge(c1, c2):
                 new_weight += new_graph[c1][c2].get("weight", 1)
             new_graph.add_edge(c1, c2, weight=new_weight)
+
+        # Relative Option: Update ks for new nodes        
+        if self.relative_ks:
+            for node in community_map:
+                new_ks[community_map[node]] += relative_ks[node]
+            self.relative_ks = new_ks
+
         return new_graph
 
     def relabel_community_map(self, community_map):
@@ -282,12 +326,12 @@ class Louvain:
         for node in community_map:
             community = community_map[node]
             community_map[node] = relabelled_communities[community]
-            if self.pre_split_communities!=None:
+            if self.pre_split_communities is not None:
                 new_pre_split_communities[relabelled_communities[community]] = \
                     self.pre_split_communities[community]
                 
         
-        if self.pre_split_communities!=None:
+        if self.pre_split_communities is not None:
             self.pre_split_communities = new_pre_split_communities
 
     def invert_community_map(self, community_map):
@@ -309,6 +353,61 @@ class Louvain:
         return community_map
 
 
+def yemeniteStep(G, splitting_func=None, verbose=False, randomized=False, remerge=False, relative=False):
+    """
+        The YemmeniteStep method:
+        
+        This methods implements the Louvain method, with an additional step of running 
+        an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds,
+        at each iteration (just before generating the new coarse graph).
+
+        We offer these options for the inner splitting functions:
+            1. "Louvain"
+                The Louvain Method (supports 'relative' option)
+            2. "GN_modularity"
+                The Girvan-Newman method, maximizng modularity (supports 'relative' option)
+            3. "GN_conductance" 
+                The Girvan-Newman method, maximizng conductance
+            4. "Newman"
+                The 'Divide and conquer' Newamn method.
+            
+        We offer these additional options:
+            1. randomized
+                Randomizes the order in which Louvain iterates through nodes on
+            2. remerge
+                After splitting a community into sub-communities, if 'remerge' option is selected
+                then in the coarse graph; sub-nodes will belong to the same community.
+            3. relative
+                if this option is selected, the values of k (node degree) and m (num of edeges) in each
+                sub-graph will be same as in the super-graph.
+                only "Louvain" and "GN-modularity" support this option.
+    """
+    if isinstance(splitting_func, str):   
+        if splitting_func == "Louvain":
+            if randomized:
+                splitting_func = splitting_functions.louvain_random
+            else:
+                splitting_func = splitting_functions.louvainfunc
+
+        elif splitting_func == "GN_modularity":
+            splitting_func = splitting_functions.girvanNewmanMaxModularity
+
+        elif splitting_func == "GN_conductance":
+            if relative:
+                print("Sorry, 'GN_conductance' does not support 'relative' option")
+            else:
+                splitting_func = splitting_functions.girvanNewmanMaxConductance
+
+        elif splitting_func == "Newman":
+            if relative:
+                print("Sorry, 'Newman' does not support 'relative' option")
+            else:
+                splitting_func = splitting_functions.newman
+
+    louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=splitting_func, remerge=remerge, relative=relative)
+    louvain.run()
+    return louvain.communities, louvain.community_map
+
 def detect_communities(G, verbose=False, randomized=False, splitting_func=None, remerge=False):
     """Returns the detected communities as a list of lists of nodes
     representing each community.
@@ -321,6 +420,6 @@ def detect_communities(G, verbose=False, randomized=False, splitting_func=None, 
     return louvain.communities, louvain.community_map
 
 def louvainfunc(G, verbose=False, randomized=False, splitting_func=None, remerge=False):
-    louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=None, remerge=remerge)
+    louvain = Louvain(G, verbose=False, randomized=False, splitting_func=None, remerge=False)
     louvain.run()
     return louvain.community_map

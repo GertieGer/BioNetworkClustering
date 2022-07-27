@@ -1,10 +1,9 @@
+#!/usr/bin/env python3
 import networkx as nx
 import math
 import csv
 import random as rand
 import sys
-from networkx.algorithms.community.centrality import girvan_newman
-import evaluation
 
 _DEBUG_ = False
 
@@ -28,12 +27,9 @@ _DEBUG_ = False
 def CmtyGirvanNewmanStep(G):
     if _DEBUG_:
         print("Running CmtyGirvanNewmanStep method ...")
-    
     init_ncomp = nx.number_connected_components(G)    #no of components
     ncomp = init_ncomp
     while ncomp <= init_ncomp:
-        if G.number_of_edges() == 0:
-            break
         bw = nx.edge_betweenness_centrality(G, weight='weight')    #edge betweenness for G
         #find the edge with max centrality
         max_ = max(bw.values())
@@ -51,7 +47,7 @@ def _GirvanNewmanGetModularity(G, deg_, m_):
     New_deg = UpdateDeg(New_A, G.nodes())
     #Let's compute the Q
     comps = nx.connected_components(G)    #list of components    
-    #print('No of communities in decomposed G: {}'.format(nx.number_connected_components(G)))
+    print('No of communities in decomposed G: {}'.format(nx.number_connected_components(G)))
     Mod = 0    #Modularity of a given partitionning
     for c in comps:
         EWC = 0    #no of edges within a community
@@ -82,17 +78,14 @@ def runGirvanNewman(G, Orig_deg, m_):
     #let's find the best split of the graph
     BestQ = 0.0
     Q = 0.0
-    while True:
-        if G.number_of_edges() == 0:
-            break    
-        else:
-            CmtyGirvanNewmanStep(G)
+    while True:    
+        CmtyGirvanNewmanStep(G)
         Q = _GirvanNewmanGetModularity(G, Orig_deg, m_);
-        #print("Modularity of decomposed G: {}".format(Q))
+        print("Modularity of decomposed G: {}".format(Q))
         if Q > BestQ:
             BestQ = Q
             Bestcomps = list(nx.connected_components(G))    #Best Split
-            #print("Identified components: {}".format(Bestcomps))
+            print("Identified components: {}".format(Bestcomps))
         if G.number_of_edges() == 0:
             break
 #     if BestQ > 0.0:
@@ -113,10 +106,9 @@ def newmanGirvan(G):
     
     #if _DEBUG_:
         #print('G nodes: {} & G no of nodes: {}'.format(G.nodes(), G.number_of_nodes()))
-
-    G = G.copy()
+    
     n = G.number_of_nodes()    #|V|
-    A = nx.adjacency_matrix(G)    #adjacenct matrix
+    A = nx.adj_matrix(G)    #adjacenct matrix
 
     m_ = 0.0    #the weighted version for number of edges
     for i in range(0,n):
@@ -135,34 +127,3 @@ def newmanGirvan(G):
 
 #if __name__ == "__main__":
    # sys.exit(main(sys.argv))
-
-def arr_to_dic(arr):
-    d={}
-    for i, com in enumerate(arr):
-        for node in com:
-            d[node]=i
-    return d
-
-def networkxMaxModularity(G):
-    comps = girvan_newman(G)
-    max_comp = None
-    max_mod = -1
-    for comp in comps:
-        mod = evaluation.mod(G, comp)
-        if mod>max_mod:
-            max_mod = mod
-            max_comp = comp
-    
-    return arr_to_dic(max_comp)
-    
-def networkxMaxConductance(G):
-    comps = girvan_newman(G)
-    max_comp = None
-    max_cond = -1
-    for comp in comps:
-        cond = evaluation.cond(G, comp)
-        if cond>max_cond:
-            max_cond = cond
-            max_comp = comp
-    
-    return arr_to_dic(max_comp)

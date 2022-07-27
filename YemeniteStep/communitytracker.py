@@ -12,10 +12,10 @@ class CommunityTracker:
         self.community_self_loops = None
         self.home_community_map = None
 
-    def initialize_network_statistics(self, G):
+    def initialize_network_statistics(self, G, relative_m=None, relative_k=None):
         self.node_to_community_map = {}
         self.home_community_map = {}
-        self.m = G.size(weight="weight")
+        self.m = G.size(weight="weight") if (relative_m is None) else relative_m
         self.degrees = {}
         self.self_loops = {}
         # Sum of the weights of the edges incident to nodes in C.
@@ -26,7 +26,7 @@ class CommunityTracker:
         for community, node in enumerate(G):
             self.node_to_community_map[node] = community
             self.home_community_map[node] = community
-            degree = G.degree(node, weight="weight")
+            degree = G.degree(node, weight="weight") if (relative_k is None) else relative_k[node]
             self.degrees[node] = self.community_degrees[community] = degree
             self_loop = 0
             if G.has_edge(node, node):

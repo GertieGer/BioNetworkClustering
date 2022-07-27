@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+# old name was community_newman.py
 import numpy as np
 import networkx as nx
 from collections import deque
