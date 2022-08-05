@@ -65,8 +65,8 @@ class Louvain:
         G = self.coarse_grain_graph
 
         # Relative Option 
-        if self.relative_k is not None: # if k is given, meaning I am a subgraph
-            self.tracker.initialize_network_statistics(G, self.relative_m, self.relative_k)
+        if self.relative_ks is not None: # if k is given, meaning I am a subgraph
+            self.tracker.initialize_network_statistics(G, self.relative_m, self.relative_ks)
         else:
             self.tracker.initialize_network_statistics(G)
         community_map = self.tracker.node_to_community_map
@@ -312,7 +312,7 @@ class Louvain:
         # Relative Option: Update ks for new nodes        
         if self.relative_ks:
             for node in community_map:
-                new_ks[community_map[node]] += relative_ks[node]
+                new_ks[community_map[node]] += self.relative_ks[node]
             self.relative_ks = new_ks
 
         return new_graph
@@ -353,7 +353,7 @@ class Louvain:
         return community_map
 
 
-def yemeniteStep(G, splitting_func=None, verbose=False, randomized=False, remerge=False, relative=False):
+def get_communities(G, splitting_func=None, verbose=False, randomized=False, remerge=False, relative=False):
     """
         The YemmeniteStep method:
         
@@ -406,18 +406,18 @@ def yemeniteStep(G, splitting_func=None, verbose=False, randomized=False, remerg
 
     louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=splitting_func, remerge=remerge, relative=relative)
     louvain.run()
-    return louvain.communities, louvain.community_map
+    return louvain.communities
 
-def detect_communities(G, verbose=False, randomized=False, splitting_func=None, remerge=False):
-    """Returns the detected communities as a list of lists of nodes
-    representing each community.
-    Uses the Louvain heuristic from:
-        Blondel, V.D. et al. Fast unfolding of communities in
-    large networks. J. Stat. Mech 10008, 1 - 12(2008).
-    """
-    louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=splitting_func, remerge=remerge)
-    louvain.run()
-    return louvain.communities, louvain.community_map
+# def detect_communities(G, verbose=False, randomized=False, splitting_func=None, remerge=False):
+#     """Returns the detected communities as a list of lists of nodes
+#     representing each community.
+#     Uses the Louvain heuristic from:
+#         Blondel, V.D. et al. Fast unfolding of communities in
+#     large networks. J. Stat. Mech 10008, 1 - 12(2008).
+#     """
+#     louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=splitting_func, remerge=remerge)
+#     louvain.run()
+#     return louvain.communities, louvain.community_map
 
 def louvainfunc(G, verbose=False, randomized=False, splitting_func=None, remerge=False):
     louvain = Louvain(G, verbose=False, randomized=False, splitting_func=None, remerge=False)

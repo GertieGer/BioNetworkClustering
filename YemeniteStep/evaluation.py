@@ -1,6 +1,6 @@
 import networkx.algorithms.community as nx_comm
 import networkx as nx
-
+from itertools import product
 
 # Modularity ## TODO: Delete, useless
 def modularity(G,arr):

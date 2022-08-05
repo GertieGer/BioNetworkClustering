@@ -2,7 +2,7 @@ import networkx as nx
 from networkx.algorithms.community.centrality import girvan_newman
 import evaluation
 import normal_newman
-import louvain
+import yemenitestep
 
 # Classic Louvain
 def louvainfunc(G, m=None, k=None):
@@ -14,7 +14,7 @@ def louvainfunc(G, m=None, k=None):
         If m,k are given - instead of treating the subgraph as independant,
         we use the k and m values (node degree and num of edges) from the super graph.
     """
-    l = louvain.Louvain(G)
+    l = yemenitestep.Louvain(G)
     if k is not None:
         l.relative_m = m
         l.relative_ks = k
@@ -25,7 +25,7 @@ def louvain_random(G, m=None, k=None):
     """
         Same as Louvainfunc, but with randomization.
     """
-    l = louvain.Louvain(G, randomized=True)
+    l = yemenitestep.Louvain(G, randomized=True)
     if k is not None:
         l.relative_m = m
         l.relative_ks = k
@@ -44,7 +44,7 @@ def girvanNewmanMaxModularity(G, m=None, k=None):
             max_mod = mod
             max_comp = comp
     
-    return arr_to_dic(max_comp)
+    return evaluation.arr_to_dic(max_comp)
     
 # Girvan-Newman (edge betweenes) - Maximise Modularity
 def girvanNewmanConductance(G):
@@ -57,7 +57,7 @@ def girvanNewmanConductance(G):
             max_cond = cond
             max_comp = comp
     
-    return arr_to_dic(max_comp)
+    return evaluation.arr_to_dic(max_comp)
 
 # Classical Newman (devide and conquer)
 def newman(G):
