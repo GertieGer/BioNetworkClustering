@@ -45,7 +45,7 @@ Install the package using::
     get_communities(G, splitting_func=None, verbose=False, randomized=False, remerge=False, relative=False)
 
 ###### Parameters:
-- **G**: NetworkX graph
+- **G**: *NetworkX graph*
 - **splitting_func**: *string, function, or None*
     Use one of the strings from the list of splitting functions above,
     or pass your own function. If None, regular Louvain will be implemented.
