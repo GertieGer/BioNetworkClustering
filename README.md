@@ -3,7 +3,7 @@
 ==============================
 
 This module implements community detection.
-The Yemmenite Step Method implements the Louvain method [#]_ , with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
+The Yemmenite Step Method implements the Louvain method [#]_, with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
 
 * We offer these options for the inner splitting functions:
     1. "Louvain"
@@ -50,7 +50,7 @@ Install the package using::
     Use one of the strings from the list of splitting functions above,
     or pass your own function. If None, regular Louvain will be implemented.
 - **verbose**: *boolean or None*
-    If True, prints some comments
+ If True, prints some comments
 - **randomized**: *boolean or None*
     If True, randomized option will be used.
 - **remerge**: *boolean or None*
