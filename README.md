@@ -47,14 +47,14 @@ Install the package using::
 ###### Parameters:
 - **G**: *NetworkX graph*
 - **splitting_func**: *string, function, or None*
-    Use one of the strings from the list of splitting functions above,
+- Use one of the strings from the list of splitting functions above,
     or pass your own function. If None, regular Louvain will be implemented.
 - **verbose**: *boolean or None*
- If True, prints some comments
+- If True, prints some comments
 - **randomized**: *boolean or None*
-    If True, randomized option will be used.
-- **remerge**: *boolean or None*
-    If True, remerge option will be used.
+- If True, randomized option will be used.
+- **remerge**: *boolean or None* -
+- If True, remerge option will be used.
 - **relative**: *boolean or None*
     If True, relative option will be used.
     only "Louvain" and "GN-modularity" support this option.
