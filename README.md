@@ -6,13 +6,13 @@ This module implements community detection.
 The Yemmenite Step Method implements the Louvain method [#]_, with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
 
 * We offer these options for the inner splitting functions:
-    1) "Louvain"
+    1) "Louvain"__
         The Louvain Method (supports 'relative' option)
-    2) "GN_modularity"
+    2) "GN_modularity"__
         The Girvan-Newman method, maximizng modularity (supports 'relative' option)
-    3) "GN_conductance" 
+    3) "GN_conductance"__
         The Girvan-Newman method, maximizng conductance
-    4) "Newman"
+    4) "Newman"__
         The 'Divide and conquer' Newamn method.
     
 * We offer these additional options:
@@ -46,17 +46,17 @@ communities = get_communities(G, splitting_func=None, verbose=False, randomized=
 ```
 
 ###### Parameters:
-* **G**: *NetworkX graph*
-* **splitting_func**: *string, function, or None*
+* **G**: *NetworkX graph*__
+* **splitting_func**: *string, function, or None*__
     Use one of the strings from the list of splitting functions above,
     or pass your own function. If None, regular Louvain will be implemented.
-* **verbose**: *boolean or None*
+* **verbose**: *boolean or None*__
     If True, prints some comments
-* **randomized**: *boolean or None*
+* **randomized**: *boolean or None*__
     If True, randomized option will be used.
-* **remerge**: *boolean or None* -
+* **remerge**: *boolean or None*__
     If True, remerge option will be used.
-* **relative**: *boolean or None*
+* **relative**: *boolean or None*__
     If True, relative option will be used.
     only "Louvain" and "GN-modularity" support this option.
 
