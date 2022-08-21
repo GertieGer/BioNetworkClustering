@@ -46,17 +46,17 @@ communities = get_communities(G, splitting_func=None, verbose=False, randomized=
 ```
 
 ###### Parameters:
-* **G**: *NetworkX graph*__
+* **G**: *NetworkX graph*<br />
 * **splitting_func**: *string, function, or None*__
     Use one of the strings from the list of splitting functions above,
     or pass your own function. If None, regular Louvain will be implemented.
-* **verbose**: *boolean or None*__
+* **verbose**: *boolean or None*<br />
     If True, prints some comments
-* **randomized**: *boolean or None*__
+* **randomized**: *boolean or None*<br />
     If True, randomized option will be used.
-* **remerge**: *boolean or None*__
+* **remerge**: *boolean or None*<br />
     If True, remerge option will be used.
-* **relative**: *boolean or None*__
+* **relative**: *boolean or None*<br />
     If True, relative option will be used.
     only "Louvain" and "GN-modularity" support this option.
 
