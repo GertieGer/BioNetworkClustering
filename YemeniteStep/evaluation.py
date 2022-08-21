@@ -23,7 +23,7 @@ def relative_modularity(G, partition, m, k):
     return Q / (2 * m)
 
 # Conductance
-def cond(G,arr):
+def conductance(G,arr):
     q=0
     for A in arr:
         #T=arr.pop(A)
@@ -34,7 +34,7 @@ def cond(G,arr):
     return res
         
 # Accurracy
-def acc(G,arr): # TODO: check if correct...
+def accurracy(G,arr): # TODO: check if correct...
     m=0
     N=0
     I=0
