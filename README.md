@@ -41,8 +41,9 @@ Install the package using::
 
 ### Usage
 -----
-.. code:: python
-    get_communities(G, splitting_func=None, verbose=False, randomized=False, remerge=False, relative=False)
+...
+communities = get_communities(G, splitting_func=None, verbose=False, randomized=False, remerge=False, relative=False)
+...
 
 ###### Parameters:
 * **G**: *NetworkX graph*
@@ -65,7 +66,7 @@ Install the package using::
 
 ### Examples
 -----
-.. code:: python
+...
 
     import networkx as nx
     import yemenitestep as ys
@@ -74,7 +75,7 @@ Install the package using::
     partition =  ys.get_communities(G, splitting_func="GN_modularity", relative=True)
     > [[0, 1, 2, 3, 7, 11, 12, 13, 17, 19, 21], [4, 5, 6, 10, 16], [8, 9, 14, 15, 18, 20, 22, 26, 29, 30, 32, 33], [23, 24, 25, 27, 28, 31]]
 
-See the Jupyter notebook for an example of visualising with matplotlib.
+...
 
 References
 ----------
