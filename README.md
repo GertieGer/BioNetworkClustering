@@ -6,13 +6,13 @@ This module implements community detection.
 The Yemmenite Step Method implements the Louvain method [#]_, with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
 
 * We offer these options for the inner splitting functions:
-    1) "Louvain"__
+    1) "Louvain"<br />
         The Louvain Method (supports 'relative' option)
-    2) "GN_modularity"__
+    2) "GN_modularity"<br />
         The Girvan-Newman method, maximizng modularity (supports 'relative' option)
-    3) "GN_conductance"__
+    3) "GN_conductance"<br />
         The Girvan-Newman method, maximizng conductance
-    4) "Newman"__
+    4) "Newman"<br />
         The 'Divide and conquer' Newamn method.
     
 * We offer these additional options:
