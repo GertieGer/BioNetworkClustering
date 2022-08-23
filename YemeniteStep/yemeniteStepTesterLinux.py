@@ -64,8 +64,8 @@ def run_test(n, fpath, method):
 
             network = f"{n}_{mu}_{i}"
             print(f"Running {method}, on network {network}")
-            netPath = sys.path[0]+r"../Graphs/{0}/network.dat"
-            commPath = sys.path[0]+r"../Graphs/{0}/community.dat"
+            netPath = sys.path[0]+r"/../Graphs/{0}/network.dat"
+            commPath = sys.path[0]+r"/../Graphs/{0}/community.dat"
         
             netfile = netPath.format(network)
             real_comms = get_comm_dic(commPath.format(network))
@@ -112,17 +112,17 @@ def main():
     threads = []
     counter = 0
     
-    os.mkdir(sys.path[0]+'\\..\\Results\\'+dt_string)
+    os.mkdir(sys.path[0]+'/../Results/'+dt_string)
 
     for method in methods_to_test:
         if RELATIVE:
             if method not in ["Louvain","GN_modularity"]:
                 continue
 
-        os.mkdir(sys.path[0]+'\\..\\Results\\'+dt_string+"\\"+method)
+        os.mkdir(sys.path[0]+'/../Results/'+dt_string+"/"+method)
         for n in n_vals:
             # create result file
-            fpath = sys.path[0]+'\\..\\Results\\'+dt_string+"\\"+method+"\\"+str(n)+".csv"
+            fpath = sys.path[0]+'/../Results/'+dt_string+"/"+method+"/"+str(n)+".csv"
             f = open(fpath, "w")
             f.write("i,size,mu,method,time,modularity,conductance,jaccard")
             f.write("\n")
