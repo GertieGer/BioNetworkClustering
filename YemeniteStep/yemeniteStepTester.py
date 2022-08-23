@@ -17,9 +17,9 @@ num_of_benchmarks = 10
 now = datetime.now()
 dt_string = now.strftime("%d_%m_%Y__%H_%M")
 methods_to_test = [
-    #"Louvain",
+    "Louvain",
     "GN_modularity",
-    "GN_conductance",
+    #"GN_conductance",
     #"Newman",
 ]
 RANDOMIZED = True
@@ -115,6 +115,10 @@ def main():
     os.mkdir(sys.path[0]+'\\..\\Results\\'+dt_string)
 
     for method in methods_to_test:
+        if RELATIVE:
+            if method not in ["Louvain","GN_modularity"]:
+                continue
+
         os.mkdir(sys.path[0]+'\\..\\Results\\'+dt_string+"\\"+method)
         for n in n_vals:
             # create result file
@@ -124,19 +128,13 @@ def main():
             f.write("\n")
             f.close()
 
-            run_test(n, fpath, method)
-            # run thread
-            # task = executor.submit(run_test, n, fpath, method) # does not block
-            # print(task.done())
-            
-            # #t = Thread(target=run_test, args=(n, mu, i))
-            # #threads.append(task)
-            # #t.start()
-            # print("Thread: "+str(counter))
-            # counter += 1
+            #run_test(n, fpath, method)
+            task = executor.submit(run_test, n, fpath, method) # does not block
+            print("starting thread: "+str(counter))
+            counter += 1
             # #run_test(n, mu, i, fpath)
 
-    #print(task.result())    
+    print(task.result())    
 
 if __name__ == '__main__':
     main()
