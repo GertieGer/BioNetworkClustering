@@ -11,13 +11,13 @@ import evaluation
 from threading import Thread
 import yemenitestep as ys
 
-n_vals = [1000, 10000]
-mu_vals = (0.4, 0.5, 0.6)
+n_vals = [10000]
+mu_vals = (0.5, 0.6)
 num_of_benchmarks = 10
 now = datetime.now()
 dt_string = now.strftime("%d_%m_%Y__%H_%M")
 methods_to_test = [
-    "Louvain",
+    #"Louvain",
     "GN_modularity",
     #"GN_conductance",
     #"Newman",
