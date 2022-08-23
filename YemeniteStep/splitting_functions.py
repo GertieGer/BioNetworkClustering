@@ -52,7 +52,7 @@ def girvanNewmanConductance(G):
     max_comp = None
     max_cond = -1
     for comp in comps:
-        cond = evaluation.cond(G, comp)
+        cond = evaluation.conductance(G, comp)
         if cond>max_cond:
             max_cond = cond
             max_comp = comp

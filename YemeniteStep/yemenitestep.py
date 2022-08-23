@@ -396,7 +396,7 @@ def get_communities(G, splitting_func=None, verbose=False, randomized=False, rem
             if relative:
                 print("Sorry, 'GN_conductance' does not support 'relative' option")
             else:
-                splitting_func = splitting_functions.girvanNewmanMaxConductance
+                splitting_func = splitting_functions.girvanNewmanConductance
 
         elif splitting_func == "Newman":
             if relative:
