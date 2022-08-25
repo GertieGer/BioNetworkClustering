@@ -406,6 +406,11 @@ def get_communities(G, splitting_func=None, verbose=False, randomized=False, rem
 
     louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=splitting_func, remerge=remerge, relative=relative)
     louvain.run()
+
+    if verbose:
+        iters = louvain.iteration_count
+        print(f'Finished in {iters} iterations')
+
     return louvain.communities
 
 # def detect_communities(G, verbose=False, randomized=False, splitting_func=None, remerge=False):

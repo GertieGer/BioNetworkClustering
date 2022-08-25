@@ -17,6 +17,7 @@ num_of_benchmarks = 10
 now = datetime.now()
 dt_string = now.strftime("%d_%m_%Y__%H_%M")
 methods_to_test = [
+    "None",
     "Louvain",
     "GN_modularity",
     "GN_conductance",
@@ -64,7 +65,6 @@ def run_test(fpath, method, rnd, rmrg, rltv):
             for i in range(num_of_benchmarks):
 
                 network = f"{n}_{mu}_{i}"
-                print(f"Running {method}, on network {network}")
                 netPath = sys.path[0]+r"/../Graphs/{0}/network.dat"
                 commPath = sys.path[0]+r"/../Graphs/{0}/community.dat"
             
@@ -73,15 +73,16 @@ def run_test(fpath, method, rnd, rmrg, rltv):
                 G = nx.read_edgelist(netfile, nodetype=int)
 
                 f = open(fpath, "a")
-                
+                method = None if method=="None" else method
                 try:
                     start = time.time()
                     comms = ys.get_communities(G, splitting_func=method, randomized=rnd, remerge=rmrg ,relative=rltv)
                     end = time.time()
                     time_ = str(end - start)
-
+                    method = method if method else "None"
                     dic = make_comm_dic(comms)
                     write_result(f, i, n, mu, method, rnd, rmrg, rltv, time_, comms, dic, real_comms, G)
+                    print(f"Finished running {method}, on network {network}")
 
                 except BaseException as ex:
                     
@@ -120,10 +121,10 @@ def main():
         os.mkdir(sys.path[0]+'/../Results/'+dt_string+"/"+method)
         for rnd in randomized:
             for rmrg in remerge:
+                if rmrg and method=="None": continue
                 for rltv in relative:
                     if rltv:
-                        if method not in ["Louvain","GN_modularity"]:
-                            continue
+                        if method not in ["Louvain","GN_modularity"]: continue
                     # create result file
                     fpath = sys.path[0]+f'/../Results/{dt_string}/{method}/rnd-{rnd}_rmrg-{rmrg}_rltv-{rltv}.csv'
                     f = open(fpath, "w")
