@@ -1,6 +1,7 @@
 import networkx.algorithms.community as nx_comm
 import networkx as nx
 from itertools import product
+import math
 
 # Modularity ## TODO: Delete, useless
 def modularity(G,arr):
@@ -90,5 +91,63 @@ def arr_to_dic(arr):
             d[node]=i
     return d
 
-        
-        
+# def accuracy(known_communities, candidate_communities):
+#     """
+#         Using annotations from "Evaluation of clustering algorithms for protein-protein 
+#         interaction networks, Brohee & van Helden, BMC 
+#         Bioinformatics, 2006"
+#     """
+#     intersection_sum = {}
+#     sum_of_max_intersections = 0
+#     for knwon_community in known_communities:
+#         N += len(knwon_community)
+#         max_intersection = 0
+#         for i, candidate_community in enumerate(candidate_communities):
+#             intersection = len(set(known_community).intersection(set(candidate_community)))
+#             intersections[i] = intersection
+#             max_intersection = max(intersection, max_intersection)
+
+def intersection_size(a, b):
+    return len(set(a).intersection(set(b)))
+
+def sensitivity(known_communities, candidate_communities):
+    sum_of_max_intersections = 0
+    sum_of_all_lens = 0
+    
+    for knwon_community in known_communities:
+        max_int_with_cand = 0
+        for candidate_community in candidate_communities:
+            int_sise = intersection_size(knwon_community, candidate_community)
+            max_int_with_cand = max(int_sise, max_int_with_cand)
+
+        sum_of_max_intersections += max_int_with_cand
+        sum_of_all_lens += len(knwon_community)
+
+    if sum_of_all_lens>0:
+        return sum_of_max_intersections/sum_of_all_lens
+    return 0
+
+def PPV(known_communities, candidate_communities):
+    sum_of_max_intersections = 0
+    sum_of_all_intersections = 0
+    
+    for candidate_community in candidate_communities:
+        max_int_with_known = 0
+        for knwon_community in known_communities:
+            int_sise = intersection_size(knwon_community, candidate_community)
+            sum_of_all_intersections += int_sise
+
+            max_int_with_known = max(int_sise, max_int_with_known)
+        sum_of_max_intersections += max_int_with_known
+            
+    if sum_of_all_intersections>0:
+        return sum_of_max_intersections/sum_of_all_intersections
+    return 0
+
+def accuracy(known_communities, candidate_communities):
+    ppv = PPV(known_communities, candidate_communities)
+    sn = sensitivity(known_communities, candidate_communities)
+    return math.sqrt(sn*ppv)
+
+
+
