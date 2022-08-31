@@ -43,7 +43,7 @@ netwroks_to_test = [
 def write_result(f, name, method, time_, comms, Y, X, G) :
     modularity = str(evaluation.modularity(G, comms))
     cunductance = str(evaluation.conductance(G, comms))
-    accuracy = str(evaluation.accuracy(X, Y))
+    accuracy = str(evaluation.accuracy(X, Y)) if X else "NA"
     f.write(f"{name},{method},{time_},{modularity},{cunductance},{accuracy}")
     f.write("\n")
 
