@@ -3,7 +3,8 @@ import networkx as nx
 from collections import defaultdict # TODO: remove, annoying
 import random
 import splitting_functions
-
+MIN_LEN = 10
+CONSTANT_MIN_LEN = False
 
 class Louvain: 
 
@@ -40,6 +41,7 @@ class Louvain:
         while not self.finished:
             self.iterate()
             i+=1
+
         if self.verbose:
             print("Finished in {} iterations".format(self.iteration_count))
         self.community_map = self.generate_community_map(
@@ -115,9 +117,6 @@ class Louvain:
                 # Move to the best community and check if we actually improved.
                 new_incident_weight = neighbour_communities[new_community]
                 self.tracker.insert(node, new_community, new_incident_weight)
-                if self.verbose:
-                    message = "Moved node {} from community {} to community {}"
-                    print(message.format(node, old_community, new_community))
 
                 if new_community != old_community:
                     improved = True
@@ -194,7 +193,9 @@ class Louvain:
         max_community = 0
         new_community_map = community_map.copy()
         for i, community in enumerate(communities):
-            if len(community)<10: ## CHANGED FOR DEBUGING ##
+            min_len = MIN_LEN if CONSTANT_MIN_LEN else len(community_map)/100
+            min_len = max(min_len, MIN_LEN)
+            if len(community)<min_len: ## CHANGED FOR DEBUGING ##
                 #to small
                 for node in community:
                     new_community_map[node] = max_community

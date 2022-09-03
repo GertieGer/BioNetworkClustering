@@ -17,16 +17,16 @@ now = datetime.now()
 dt_string = now.strftime("%d_%m_%Y__%H_%M")
 
 netwroks_to_test = [
-    # {
-    #     'name': '100_0.4_0',
-    #     'network': sys.path[0]+r"/../Graphs/100_0.4_0/network.dat",
-    #     'clusters': sys.path[0]+r"/../Graphs/100_0.4_0/community.dat"
-    # },
     {
-        'name': 'Yeast',
-        'network': sys.path[0]+r"/../Graphs/Yeast/edges.txt",
-        'clusters': sys.path[0]+r"/../Graphs/Yeast/clusters.txt"
+        'name': '100_0.4_0',
+        'network': sys.path[0]+r"/../Graphs/100_0.4_0/network.dat",
+        'clusters': sys.path[0]+r"/../Graphs/100_0.4_0/community.dat"
     },
+    # {
+    #     'name': 'Yeast',
+    #     'network': sys.path[0]+r"/../Graphs/Yeast/edges.txt",
+    #     'clusters': sys.path[0]+r"/../Graphs/Yeast/clusters.txt"
+    # },
     {
         'name': 'Arabidopsis',
         'network': sys.path[0]+r"/../Graphs/Arabidopsis/edges.txt",
@@ -41,6 +41,7 @@ netwroks_to_test = [
 
 
 def write_result(f, name, method, time_, comms, Y, X, G) :
+    print("writing results")
     modularity = str(evaluation.modularity(G, comms))
     cunductance = str(evaluation.conductance(G, comms))
     accuracy = str(evaluation.accuracy(X, Y)) if X else "NA"
@@ -77,12 +78,13 @@ def make_comm_dic(comms):
 
 def run_test(network, method, G, real_comms):
     
-    out_file = sys.path[0]+f"/../Results/{network['name']}_{method}.csv"
-    
+    out_file = sys.path[0]+f"/../Results/{dt_string}_{network['name']}_{method}.csv"
+    print(f"Started {method} on {network['name']} ({datetime.now().strftime('%d_%m_%Y__%H_%M')})")
+
     try:
         start = time.time()
         if method == 'GN_mod':
-            comms = ys.get_communities(G, "GN_modularity", randomized=True, remerge=False ,relative=True)
+            comms = ys.get_communities(G, "GN_modularity", randomized=True, remerge=False ,relative=True, verbose=True)
         if method == 'Louvain':
             comms = nx_comm.louvain_communities(G)
         if method == 'Newman':
@@ -110,28 +112,27 @@ def run_test(network, method, G, real_comms):
         f.write("\n");
 
     mins = (end - start)/60
-    print(f"Finished {network['name']} on {method} in {mins} minutes")
+    print(f"Finished {method} on {network['name']} in {mins} minutes")
     f.close()
 
 
 
 def main():
-    executor = ProcessPoolExecutor(max_workers=10)
-    threads = []
-    counter = 0
+    # executor = ProcessPoolExecutor(max_workers=10)
+    # threads = []
+    # counter = 0
     
     for network in netwroks_to_test:
         real_comms = get_comm_dic(network['clusters'])
         G = nx.read_edgelist(network['network'], delimiter='\t')
-        for method in ['Louvain', 'GN_mod']:
-
-            # run_test(network, method, G, real_comms)
-            task = executor.submit(run_test, network, method, G, real_comms) # does not block
-            print("starting thread: "+str(counter))
-            counter += 1
+        for method in ['GN_mod']: #'Louvain'
+            run_test(network, method, G, real_comms)
+            #task = executor.submit(run_test, network, method, G, real_comms) # does not block
+            # print("starting thread: "+str(counter))
+            # counter += 1
             # #run_test(n, mu, i, fpath)
 
-    print(task.result())    
+    #print(task.result())    
 
 if __name__ == '__main__':
     main()
