@@ -27,16 +27,16 @@ netwroks_to_test = [
         'network': sys.path[0]+r"/../Graphs/Yeast/edges.txt",
         'clusters': sys.path[0]+r"/../Graphs/Yeast/clusters.txt"
     },
-    # {
-    #     'name': 'Arabidopsis',
-    #     'network': sys.path[0]+r"/../Graphs/Arabidopsis/edges.txt",
-    #     'clusters': sys.path[0]+r"/../Graphs/Arabidopsis/clusters.txt"
-    # },
-    # {
-    #     'name': 'ca-CondMat',
-    #     'network': sys.path[0]+r"/../Graphs/ca-CondMat.txt",
-    #     'clusters': None
-    # },
+    {
+        'name': 'Arabidopsis',
+        'network': sys.path[0]+r"/../Graphs/Arabidopsis/edges.txt",
+        'clusters': sys.path[0]+r"/../Graphs/Arabidopsis/clusters.txt"
+    },
+    {
+        'name': 'ca-CondMat',
+        'network': sys.path[0]+r"/../Graphs/ca-CondMat.txt",
+        'clusters': None
+    },
 ]
 
 
@@ -83,11 +83,12 @@ def run_test(network, method, G, real_comms):
 
     try:
         start = time.time()
-        if method == 'GN_mod':
+        if method == 'YSGN_mod':
             comms = ys.get_communities(G, "GN_modularity", randomized=True, remerge=False ,relative=True, verbose=True)
-        if method == 'Louvain':
+        if method == 'YSLouvain':
             comms = ys.get_communities(G, "Louvain", randomized=False, remerge=False ,relative=False, verbose=True)
-            #comms = nx_comm.louvain_communities(G)
+        if method == 'Louvain':
+            comms = nx_comm.louvain_communities(G)
         if method == 'Newman':
             return
 
@@ -126,7 +127,7 @@ def main():
     for network in netwroks_to_test:
         real_comms = get_comm_dic(network['clusters'])
         G = nx.read_edgelist(network['network'], delimiter='\t')
-        for method in ['Louvain']:
+        for method in ['Louvain', 'YSLouvain']:
             run_test(network, method, G, real_comms)
             #task = executor.submit(run_test, network, method, G, real_comms) # does not block
             # print("starting thread: "+str(counter))

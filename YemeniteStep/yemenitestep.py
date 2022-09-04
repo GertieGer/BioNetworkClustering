@@ -4,7 +4,7 @@ from collections import defaultdict # TODO: remove, annoying
 import random
 import splitting_functions
 MIN_LEN = 10
-CONSTANT_MIN_LEN = False
+CONSTANT_MIN_LEN = True
 
 class Louvain: 
 
