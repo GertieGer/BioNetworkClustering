@@ -33,30 +33,6 @@ def conductance(G,arr):
     res=q/len(arr)
     res=1-res
     return res
-        
-# Accurracy
-def accurracy(G,arr): # TODO: check if correct...
-    m=0
-    N=0
-    I=0
-    m2=0
-    N2=0
-    for A in arr:
-        m=0
-        for B in arr:
-            if (A!=B):
-                h= A.intersection(B)
-                if(m<len(h)):
-                    m=len(h)
-                    m2=len(B)
-        N+=len(A)
-        I+=m
-        N2+=m2
-    sen=I/N
-    p=I/N2
-    res=sen*p
-    res=res**0.5
-    return res
 
 # Jaccard
 def jaccard(X, Y):
@@ -90,22 +66,6 @@ def arr_to_dic(arr):
         for node in com:
             d[node]=i
     return d
-
-# def accuracy(known_communities, candidate_communities):
-#     """
-#         Using annotations from "Evaluation of clustering algorithms for protein-protein 
-#         interaction networks, Brohee & van Helden, BMC 
-#         Bioinformatics, 2006"
-#     """
-#     intersection_sum = {}
-#     sum_of_max_intersections = 0
-#     for knwon_community in known_communities:
-#         N += len(knwon_community)
-#         max_intersection = 0
-#         for i, candidate_community in enumerate(candidate_communities):
-#             intersection = len(set(known_community).intersection(set(candidate_community)))
-#             intersections[i] = intersection
-#             max_intersection = max(intersection, max_intersection)
 
 def intersection_size(a, b):
     return len(set(a).intersection(set(b)))
