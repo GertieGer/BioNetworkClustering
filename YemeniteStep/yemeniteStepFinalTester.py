@@ -39,8 +39,8 @@ netwroks_to_test = [
     # },
     {
         'name': 'DBLP',
-        'network': sys.path[0]+r"/../Graphs/DBLP/com-dblp.all.cmty.txt",
-        'clusters': sys.path[0]+r"/../Graphs/DBLP/com-dblp.ungraph.txt"
+        'network': sys.path[0]+r"/../Graphs/DBLP/com-dblp.ungraph.txt",
+        'clusters': sys.path[0]+r"/../Graphs/DBLP/com-dblp.all.cmty.txt"
     }
 ]
 
