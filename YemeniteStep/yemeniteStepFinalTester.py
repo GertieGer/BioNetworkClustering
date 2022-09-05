@@ -8,9 +8,9 @@ import os
 import traceback
 import time
 from datetime import datetime
-import evaluation
+import yemenitestep.evaluation as evaluation
 from threading import Thread
-import yemenitestep as ys
+import yemenitestep.yemenitestep as ys
 
 
 now = datetime.now()

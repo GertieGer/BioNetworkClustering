@@ -70,7 +70,7 @@ communities = get_communities(G, splitting_func=None, verbose=False, randomized=
 ```
 
     import networkx as nx
-    import yemenitestep as ys
+    iimport yemenitestep.yemenitestep as ys
 
     G = nx.karate_club_graph()
     partition =  ys.get_communities(G, splitting_func="GN_modularity", relative=True)

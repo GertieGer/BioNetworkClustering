@@ -3,8 +3,8 @@
 import numpy as np
 import networkx as nx
 from collections import deque
-import utils
-import _divide
+import yemenitestep.utils as utils
+import yemenitestep._divide as _divide
 
 def partition(network, refine=True, maxcomm=None):
     '''

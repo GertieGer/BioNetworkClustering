@@ -1,8 +1,8 @@
-from communitytracker import CommunityTracker
+from yemenitestep.communitytracker import CommunityTracker
 import networkx as nx
 from collections import defaultdict # TODO: remove, annoying
 import random
-import splitting_functions
+import yemenitestep.splitting_functions as splitting_functions
 MIN_LEN = 10
 CONSTANT_MIN_LEN = True
 

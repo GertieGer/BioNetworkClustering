@@ -4,7 +4,7 @@ import numpy as np
 import networkx as nx
 from scipy import sparse
 import scipy.sparse.linalg
-import utils
+import yemenitestep.utils as utils
 
 def _divide(network, community_dict, comm_index, B, refine=False):
     '''

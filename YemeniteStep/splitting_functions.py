@@ -1,8 +1,8 @@
 import networkx as nx
 from networkx.algorithms.community.centrality import girvan_newman
-import evaluation
-import normal_newman
-import yemenitestep
+import yemenitestep.evaluation as evaluation
+import yemenitestep.normal_newman as normal_newman
+import yemenitestep.yemenitestep as yemenitestep
 
 # Classic Louvain
 def louvainfunc(G, m=None, k=None):
