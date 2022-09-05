@@ -3,7 +3,7 @@ The Yemmenite Step Method Python Project
 ==============================
 
 This module implements community detection using the Yemmenite Step Method.
-The Yemmenite Step Method implements the Louvain method [#f1]_ , with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
+The Yemmenite Step Method implements the Louvain method [#f1]_ , with an additional step where in each Louvain iteration, each community is clustered again using a separate algorithm (reffered to here as "splitting function").
 
 | We offer these options for the inner splitting functions
 1. Louvain
@@ -13,18 +13,16 @@ The Yemmenite Step Method implements the Louvain method [#f1]_ , with an additio
 3. GN_conductance 
     The Girvan-Newman method [#f2]_, maximizng conductance
 4. Newman
-    The 'Divide and conquer' Newamn method [#f3]_.
+    The 'Divide and Conquer' Newamn method [#f3]_
     
-| We offer these additional options
+| We offer these additional options:
 1) Randomized
-    Randomizes the order in which Louvain iterates through nodes on
+    Randomizes the order in which Louvain iterates over nodes.
 2) Remerge
-    After splitting a community into sub-communities, if 'remerge' option is selected
-    then in the coarse graph; sub-nodes will belong to the same community.
+    After splitting a community into sub-communities, sub-nodes will belong to the same community in the coarse graph.
 3) Relative
-    if this option is selected, the values of k (node degree) and m (num of edeges) in each
-    sub-graph will be same as in the super-graph.
-    only "Louvain" and "GN-modularity" support this option.
+    The values of *k* (node degree) and *m* (num of edeges) in each sub-graph will be same as in the super-graph.
+    This option is supported only for the "Louvain" and "GN-modularity" splitting functions.
 
 Requirements
 ------------
@@ -59,11 +57,11 @@ After Insatlling, you can import the package and call ys.get_communities() funct
     partition =  ys.get_communities(G, splitting_func="GN_modularity", relative=True)
     >> [[0, 1, 2, 3, 7, 11, 12, 13, 17, 19, 21], [4, 5, 6, 10, 16], [8, 9, 14, 15, 18, 20, 22, 26, 29, 30, 32, 33], [23, 24, 25, 27, 28, 31]]
 
-You can Try running the example file from terminal::
+You can try running the example file from terminal::
 
     python3 YemeniteStepExample.py
 
-Or Edit it to run different methods on any network you wish.
+or edit it to run different methods on any network you wish.
 You can read the files in "Test Files", that were used for personal testing, but have examples on how to evaluate the methods using the evaluation methods in evaluation.py file.
 
 get_communities Parameters:
@@ -74,7 +72,7 @@ get_communities Parameters:
     Use one of the strings from the list of splitting functions above,
     or pass your own function. If None, regular Louvain will be implemented.
 * verbose: ``boolean or None``
-    If True, prints some comments
+    If True, prints some comments.
 * randomized: ``boolean or None``
     If True, randomized option will be used.
 * remerge: ``boolean or None``
