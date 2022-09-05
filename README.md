@@ -81,8 +81,8 @@ You can read the files in "Test Files", that were used for personal testing, but
     only "Louvain" and "GN-modularity" support this option.
 
 ##### Returns:
-A list of sets (partition of G). 
-Each set represents one community and contains all the nodes that constitute it.
+A list of list (partition of G). 
+Each list represents one community and contains all the nodes that constitute it.
 
 ### Examples
 -----
