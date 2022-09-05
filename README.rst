@@ -31,7 +31,7 @@ Requirements
 
 * Python 3
 * NetworkX 1.11
-* Scipy
+* SciPy 0.9.0 
 
 
 Getting Started
