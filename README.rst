@@ -72,36 +72,33 @@ Or Edit it to run different methods on any network you wish.
 You can read the files in "Test Files", that were used for personal testing, but have examples on how to evaluate the methods using the evaluation methods in evaluation.py file.
 
 get_communities Parameters:
-* **G**: *NetworkX graph*<br />
-* **splitting_func**: *string, function, or None*<br />
+-------------------
+
+The following attributes can be passed to a Response mock:
+
+method (``str``)
+    The HTTP method (GET, POST, etc).
+
+url (``str`` or ``compiled regular expression``)
+    The full resource URL.
+* G: ``NetworkX graph``
+**splitting_func**: ``string, function, or None*``
     Use one of the strings from the list of splitting functions above,
     or pass your own function. If None, regular Louvain will be implemented.
-* **verbose**: *boolean or None*<br />
+**verbose**: ``boolean or None``
     If True, prints some comments
-* **randomized**: *boolean or None*<br />
+**randomized**: ``boolean or None``
     If True, randomized option will be used.
-* **remerge**: *boolean or None*<br />
+**remerge**: ``boolean or None``
     If True, remerge option will be used.
-* **relative**: *boolean or None*<br />
+**relative**: ``boolean or None``
     If True, relative option will be used.
     only "Louvain" and "GN-modularity" support this option.
 
-Returns:
+**Returns:**
 A list of list (partition of G). 
 Each list represents one community and contains all the nodes that constitute it.
 
-Examples
------
-``
-
-    import yemenitestep.yemenitestep as ys
-    import networkx as nx
-
-    G = nx.karate_club_graph()
-    partition =  ys.get_communities(G, splitting_func="GN_modularity", relative=True)
-    > [[0, 1, 2, 3, 7, 11, 12, 13, 17, 19, 21], [4, 5, 6, 10, 16], [8, 9, 14, 15, 18, 20, 22, 26, 29, 30, 32, 33], [23, 24, 25, 27, 28, 31]]
-
-``
 
 References
 ----------
