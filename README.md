@@ -67,7 +67,7 @@ You can read the files in "Test Files", that were used for personal testing, but
 
 #### get_communities Parameters:
 * **G**: *NetworkX graph*<br />
-* **splitting_func**: *string, function, or None*__
+* **splitting_func**: *string, function, or None*<br />
     Use one of the strings from the list of splitting functions above,
     or pass your own function. If None, regular Louvain will be implemented.
 * **verbose**: *boolean or None*<br />
