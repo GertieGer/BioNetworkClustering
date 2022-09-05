@@ -31,6 +31,7 @@ The Yemmenite Step Method implements the Louvain method [#]_, with an additional
 
 * Python 3
 * NetworkX 1.11
+* Scipy
 
 
 ### Getting Started
