@@ -50,82 +50,18 @@
 
 # * Example:
 
-# >>> import networkx as nx
-# >>> import yemenitestep as ys
-# >>>
-# >>> G = nx.karate_club_graph()
-# >>> ys.get_communities(G, splitting_func="GN_modularity", relative=True)
+import yemenitestep.yemenitestep as ys
+import networkx as nx
+
+G = nx.karate_club_graph()
+partition =  ys.get_communities(G, splitting_func="GN_modularity", relative=True)
+print("""
+This example file runs:
+YemenStep with the Girvan-Newman (Modularity) as the splitting method,
+with the additional option "Relative",
+on nx.karate_club_graph().
+
+The communities found are:
+""")
+print(partition)
 # [[0, 1, 2, 3, 7, 11, 12, 13, 17, 19, 21], [4, 5, 6, 10, 16], [8, 9, 14, 15, 18, 20, 22, 26, 29, 30, 32, 33], [23, 24, 25, 27, 28, 31]]
-
-# """
-
-# from collections import defaultdict
-# from concurrent.futures import ProcessPoolExecutor
-# import networkx as nx
-# import scipy
-# import sys
-# import os
-# import time
-# from datetime import datetime
-# import evaluation
-# from threading import Thread
-# import yemenitestep as ys
-
-# def get_comms_from_dic(community_map):
-#     inverted_community_map = defaultdict(list)
-#     for node in community_map:
-#         inverted_community_map[community_map[node]].append(node)
-#     return list(inverted_community_map.values())
-
-
-# def get_comm_dic(path):
-#     d = {}
-#     f = open(path, "r")
-#     lines = f.readlines()
-#     for line in lines:
-#         node, comm = line.strip().split()
-#         d[int(node)] = int(comm)
-#     return d
-
-
-# network = f"yeast"
-# netPath = sys.path[0]+r"\..\Graphs\{0}\network.dat"
-# commPath = sys.path[0]+r"\..\Graphs\{0}\community.dat"
-# outPath = ""
-
-# real_comms = get_comm_dic(commPath)
-# G = nx.read_edgelist(nenetPathtfile, nodetype=int)
-
-# f = open(outPath, "a")
-
-# try:
-#     start = time.time()
-#     comms = ys.get_communities(G, splitting_func=method, randomized=RANDOMIZED, remerge=REMERGE ,relative=RELATIVE)
-#     end = time.time()
-#     time_ = str(end - start)
-
-#     dic = make_comm_dic(comms)
-#     write_result(f, i, n, mu, method, time_, comms, dic, real_comms, G)
-
-# except BaseException as ex:
-    
-#     # Get current system exception
-#     ex_type, ex_value, ex_traceback = sys.exc_info()
-
-#     # Extract unformatter stack traces as tuples
-#     trace_back = traceback.extract_tb(ex_traceback)
-
-#     # Format stacktrace
-#     stack_trace = list()
-
-#     for trace in trace_back:
-#         stack_trace.append("File : %s , Line : %d, Func.Name : %s, Message : %s" % (trace[0], trace[1], trace[2], trace[3]))
-
-#     print(method+"on"+network+" FAILED")
-#     f.write(network+","+"ERROR")
-#     f.write("Exception type : %s " % ex_type.__name__)
-#     f.write("Exception message : %s" %ex_value)
-#     f.write("Stack trace : %s" %stack_trace)
-#     f.write("\n");
-
-#         f.close()
