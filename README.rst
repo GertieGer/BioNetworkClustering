@@ -5,7 +5,7 @@ The Yemmenite Step Method Python Project
 This module implements community detection using the Yemmenite Step Method.
 The Yemmenite Step Method implements the Louvain method[^1], with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
 
-We offer these options for the inner splitting functions:
+We offer these options for the inner splitting functions
 1. Louvain
     The Louvain Method (supports 'relative' option)
 2. GN_modularity
@@ -15,7 +15,7 @@ We offer these options for the inner splitting functions:
 4. Newman
     The 'Divide and conquer' Newamn method.
     
-We offer these additional options:
+We offer these additional options
 1) Randomized
     Randomizes the order in which Louvain iterates through nodes on
 2) Remerge
