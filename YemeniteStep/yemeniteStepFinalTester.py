@@ -67,12 +67,19 @@ def get_comm_dic(path):
     f = open(path, "r")
     lines = f.readlines()
     for line in lines:
-        try:
-            node, comm = line.strip().split('\t')
-        except:
-            pass
+        node, comm = line.strip().split('\t')
         d[node] = comm
     return d
+
+def get_comm_dic2(path):
+    if path is None: return None
+    comms = []
+    f = open(path, "r")
+    lines = f.readlines()
+    for line in lines:
+        comm = line.strip().split('\t')
+        comms.append(comm)
+    return make_comm_dic(comms)
 
 def make_comm_dic(comms):
     community_map = {}
@@ -130,7 +137,10 @@ def main():
     # counter = 0
     
     for network in netwroks_to_test:
-        real_comms = get_comm_dic(network['clusters'])
+        if network['name']=='DBLP':
+            real_comms = get_comm_dic2(network['clusters'])
+        else:
+            real_comms = get_comm_dic(network['clusters'])
         G = nx.read_edgelist(network['network'], delimiter='\t')
         for method in ['YSLouvain','Louvain']:
             run_test(network, method, G, real_comms)
