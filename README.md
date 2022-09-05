@@ -36,15 +36,33 @@ The Yemmenite Step Method implements the Louvain method [#]_, with an additional
 
 ### Getting Started
 -----
-Install the package using::
-
-    python setup.py install
+Clone the repository:
+```
+git clone https://github.com/GertieGer/BioNetworkClustering.git
+cd BioNetworkClustering
+```
+Install the package using:
+```
+sudo python3 setup.py build
+sudo python3 setup.py install
+```
 
 ### Usage
 -----
+After Insatlling, you can import the package, and use on a NetworkX graph:
 ```
-communities = get_communities(G, splitting_func=None, verbose=False, randomized=False, remerge=False, relative=False)
+import yemenitestep.yemenitestep as ys
+import networkx as nx
+
+G = nx.karate_club_graph()
+partition =  ys.get_communities(G, splitting_func="GN_modularity", relative=True)
+>> [[0, 1, 2, 3, 7, 11, 12, 13, 17, 19, 21], [4, 5, 6, 10, 16], [8, 9, 14, 15, 18, 20, 22, 26, 29, 30, 32, 33], [23, 24, 25, 27, 28, 31]]
 ```
+You can Try running the example file from terminal:
+```
+python3 YemeniteStepExample.py
+```
+Or Edit it to run different methods on any network you wish.
 
 ###### Parameters:
 * **G**: *NetworkX graph*<br />
