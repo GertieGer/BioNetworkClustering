@@ -91,8 +91,8 @@ Each list represents one community and contains all the nodes that constitute it
 Credits
 ----------
 Using some code from:
-Copyright (c) 2017 Timothy Leung: https://github.com/tzyl/louvain-communities/
-Copyright 2018 Zhiya Zuo: https://github.com/zhiyzuo/python-modularity-maximization
+* Copyright (c) 2017 Timothy Leung: https://github.com/tzyl/louvain-communities/
+* Copyright 2018 Zhiya Zuo: https://github.com/zhiyzuo/python-modularity-maximization
 
 References
 ----------
