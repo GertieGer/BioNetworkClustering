@@ -3,7 +3,7 @@
 ==============================
 
 This module implements community detection using the Yemmenite Step Method.<br />
-The Yemmenite Step Method implements the Louvain method [#]_, with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
+The Yemmenite Step Method implements the Louvain method[^1], with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
 
 * We offer these options for the inner splitting functions:
     1) "Louvain"<br />
@@ -100,6 +100,6 @@ Each list represents one community and contains all the nodes that constitute it
 References
 ----------
 
-.. [#] Blondel V.D., Guillaume J.-L., Lambiotte R., Lefebvre E. (2008) Fast
+.. [^1] Blondel V.D., Guillaume J.-L., Lambiotte R., Lefebvre E. (2008) Fast
    unfolding of communities in large networks. J. Stat. Mech. P10008
    (https://arxiv.org/abs/0803.0476)
