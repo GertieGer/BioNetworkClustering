@@ -82,8 +82,7 @@ get_communities Parameters:
     only "Louvain" and "GN-modularity" support this option.
 
 **Returns:**
-A list of list (partition of G). 
-Each list represents one community and contains all the nodes that constitute it.
+a partition of G's nodes, represented as a list of lists. Each sub-list represents one community and contains all the nodes that constitute it.
 
 
 Credits
