@@ -3,9 +3,9 @@ The Yemmenite Step Method Python Project
 ==============================
 
 This module implements community detection using the Yemmenite Step Method.
-The Yemmenite Step Method implements the Louvain method[^1], with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
+The Yemmenite Step Method implements the Louvain method[#]_ , with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
 
-We offer these options for the inner splitting functions
+| We offer these options for the inner splitting functions
 1. Louvain
     The Louvain Method (supports 'relative' option)
 2. GN_modularity
@@ -15,7 +15,7 @@ We offer these options for the inner splitting functions
 4. Newman
     The 'Divide and conquer' Newamn method.
     
-We offer these additional options
+| We offer these additional options
 1) Randomized
     Randomizes the order in which Louvain iterates through nodes on
 2) Remerge
@@ -36,32 +36,38 @@ Requirements
 
 Getting Started
 -----
-Clone the repository:
-``
-git clone https://github.com/GertieGer/BioNetworkClustering.git
-cd BioNetworkClustering
-``
-Install the package using:
-``
-sudo python3 setup.py build
-sudo python3 setup.py install
-``
+| Clone the repository:
+
+.. code:: python
+
+    git clone https://github.com/GertieGer/BioNetworkClustering.git
+    cd BioNetworkClustering
+
+| Install the package using:
+
+.. code:: python
+
+    sudo python3 setup.py build
+    sudo python3 setup.py install
+
 
 Usage
 -----
 After Insatlling, you can import the package and call ys.get_communities() function:
-``
-import yemenitestep.yemenitestep as ys
-import networkx as nx
 
-G = nx.karate_club_graph()
-partition =  ys.get_communities(G, splitting_func="GN_modularity", relative=True)
->> [[0, 1, 2, 3, 7, 11, 12, 13, 17, 19, 21], [4, 5, 6, 10, 16], [8, 9, 14, 15, 18, 20, 22, 26, 29, 30, 32, 33], [23, 24, 25, 27, 28, 31]]
-``
-You can Try running the example file from terminal:
-``
-python3 YemeniteStepExample.py
-``
+.. code:: python
+
+    import yemenitestep.yemenitestep as ys
+    import networkx as nx
+
+    G = nx.karate_club_graph()
+    partition =  ys.get_communities(G, splitting_func="GN_modularity", relative=True)
+    >> [[0, 1, 2, 3, 7, 11, 12, 13, 17, 19, 21], [4, 5, 6, 10, 16], [8, 9, 14, 15, 18, 20, 22, 26, 29, 30, 32, 33], [23, 24, 25, 27, 28, 31]]
+
+You can Try running the example file from terminal::
+
+    python3 YemeniteStepExample.py
+
 Or Edit it to run different methods on any network you wish.
 You can read the files in "Test Files", that were used for personal testing, but have examples on how to evaluate the methods using the evaluation methods in evaluation.py file.
 
@@ -100,6 +106,6 @@ Examples
 References
 ----------
 
-[^1] Blondel V.D., Guillaume J.-L., Lambiotte R., Lefebvre E. (2008) Fast
+.. [#] Blondel V.D., Guillaume J.-L., Lambiotte R., Lefebvre E. (2008) Fast
    unfolding of communities in large networks. J. Stat. Mech. P10008
    (https://arxiv.org/abs/0803.0476)
