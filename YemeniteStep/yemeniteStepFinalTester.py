@@ -83,9 +83,9 @@ def get_comm_dic2(path):
 
 def make_comm_dic(comms):
     community_map = {}
-    for comm in comms:
+    for i, comm in enumerate(comms):
         for node in comm:
-            community_map[node] = comm
+            community_map[node] = i
     return community_map
 
 def run_test(network, method, G, real_comms):
