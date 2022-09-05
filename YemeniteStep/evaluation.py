@@ -77,8 +77,8 @@ def sensitivity(known_communities, candidate_communities):
     for knwon_community in known_communities:
         max_int_with_cand = 0
         for candidate_community in candidate_communities:
-            int_sise = intersection_size(knwon_community, candidate_community)
-            max_int_with_cand = max(int_sise, max_int_with_cand)
+            int_size = intersection_size(knwon_community, candidate_community)
+            max_int_with_cand = max(int_size, max_int_with_cand)
 
         sum_of_max_intersections += max_int_with_cand
         sum_of_all_lens += len(knwon_community)
@@ -94,10 +94,10 @@ def PPV(known_communities, candidate_communities):
     for candidate_community in candidate_communities:
         max_int_with_known = 0
         for knwon_community in known_communities:
-            int_sise = intersection_size(knwon_community, candidate_community)
-            sum_of_all_intersections += int_sise
+            int_size = intersection_size(knwon_community, candidate_community)
+            sum_of_all_intersections += int_size
 
-            max_int_with_known = max(int_sise, max_int_with_known)
+            max_int_with_known = max(int_size, max_int_with_known)
         sum_of_max_intersections += max_int_with_known
             
     if sum_of_all_intersections>0:
