@@ -69,13 +69,6 @@ You can read the files in "Test Files", that were used for personal testing, but
 get_communities Parameters:
 -------------------
 
-The following attributes can be passed to a Response mock:
-
-method (``str``)
-    The HTTP method (GET, POST, etc).
-
-url (``str`` or ``compiled regular expression``)
-    The full resource URL.
 * G: ``NetworkX graph``
 * splitting_func: ``string, function, or None*``
     Use one of the strings from the list of splitting functions above,
