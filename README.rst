@@ -7,10 +7,10 @@ The Yemmenite Step Method implements the Louvain method [#f1]_ , with an additio
 
 | We offer these options for the inner splitting functions
 1. Louvain
-    The Louvain Method (supports 'relative' option)
+    The Louvain Method [#f1]_ (supports 'Relative' option)
 2. GN_modularity
-    The Girvan-Newman method [#f2]_, maximizng modularity (supports 'relative' option)
-3. GN_conductance [#f1]_
+    The Girvan-Newman method [#f2]_, maximizng modularity (supports 'Relative' option)
+3. GN_conductance 
     The Girvan-Newman method [#f2]_, maximizng conductance
 4. Newman
     The 'Divide and conquer' Newamn method [#f3]_.
