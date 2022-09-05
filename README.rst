@@ -6,27 +6,27 @@ This module implements community detection using the Yemmenite Step Method.
 The Yemmenite Step Method implements the Louvain method[^1], with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
 
 * We offer these options for the inner splitting functions:
-    1) "Louvain"<br />
-        The Louvain Method (supports 'relative' option)
-    2) "GN_modularity"<br />
-        The Girvan-Newman method, maximizng modularity (supports 'relative' option)
-    3) "GN_conductance"<br />
-        The Girvan-Newman method, maximizng conductance
-    4) "Newman"<br />
-        The 'Divide and conquer' Newamn method.
+1. "Louvain"
+    The Louvain Method (supports 'relative' option)
+2. "GN_modularity"
+    The Girvan-Newman method, maximizng modularity (supports 'relative' option)
+3. "GN_conductance"
+    The Girvan-Newman method, maximizng conductance
+4. "Newman"
+    The 'Divide and conquer' Newamn method.
     
 * We offer these additional options:
-    1) randomized
-        Randomizes the order in which Louvain iterates through nodes on
-    2) remerge
-        After splitting a community into sub-communities, if 'remerge' option is selected
-        then in the coarse graph; sub-nodes will belong to the same community.
-    3) relative
-        if this option is selected, the values of k (node degree) and m (num of edeges) in each
-        sub-graph will be same as in the super-graph.
-        only "Louvain" and "GN-modularity" support this option.
+1) randomized
+    Randomizes the order in which Louvain iterates through nodes on
+2) remerge
+    After splitting a community into sub-communities, if 'remerge' option is selected
+    then in the coarse graph; sub-nodes will belong to the same community.
+3) relative
+    if this option is selected, the values of k (node degree) and m (num of edeges) in each
+    sub-graph will be same as in the super-graph.
+    only "Louvain" and "GN-modularity" support this option.
 
-### Requirements
+Requirements
 ------------
 
 * Python 3
@@ -34,7 +34,7 @@ The Yemmenite Step Method implements the Louvain method[^1], with an additional 
 * Scipy
 
 
-### Getting Started
+Getting Started
 -----
 Clone the repository:
 ``
@@ -47,7 +47,7 @@ sudo python3 setup.py build
 sudo python3 setup.py install
 ``
 
-### Usage
+Usage
 -----
 After Insatlling, you can import the package and call ys.get_communities() function:
 ``
@@ -65,7 +65,7 @@ python3 YemeniteStepExample.py
 Or Edit it to run different methods on any network you wish.
 You can read the files in "Test Files", that were used for personal testing, but have examples on how to evaluate the methods using the evaluation methods in evaluation.py file.
 
-#### get_communities Parameters:
+get_communities Parameters:
 * **G**: *NetworkX graph*<br />
 * **splitting_func**: *string, function, or None*<br />
     Use one of the strings from the list of splitting functions above,
@@ -80,11 +80,11 @@ You can read the files in "Test Files", that were used for personal testing, but
     If True, relative option will be used.
     only "Louvain" and "GN-modularity" support this option.
 
-##### Returns:
+Returns:
 A list of list (partition of G). 
 Each list represents one community and contains all the nodes that constitute it.
 
-### Examples
+Examples
 -----
 ``
 
