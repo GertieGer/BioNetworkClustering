@@ -17,21 +17,21 @@ now = datetime.now()
 dt_string = now.strftime("%d_%m_%Y__%H_%M")
 
 netwroks_to_test = [
-    {
-        'name': '100_0.4_0',
-        'network': sys.path[0]+r"/../Graphs/100_0.4_0/network.dat",
-        'clusters': sys.path[0]+r"/../Graphs/100_0.4_0/community.dat"
-    },
-    {
-        'name': 'Yeast',
-        'network': sys.path[0]+r"/../Graphs/Yeast/edges.txt",
-        'clusters': sys.path[0]+r"/../Graphs/Yeast/clusters.txt"
-    },
-    {
-        'name': 'Arabidopsis',
-        'network': sys.path[0]+r"/../Graphs/Arabidopsis/edges.txt",
-        'clusters': sys.path[0]+r"/../Graphs/Arabidopsis/clusters.txt"
-    },
+    # {
+    #     'name': '100_0.4_0',
+    #     'network': sys.path[0]+r"/../Graphs/100_0.4_0/network.dat",
+    #     'clusters': sys.path[0]+r"/../Graphs/100_0.4_0/community.dat"
+    # },
+    # {
+    #     'name': 'Yeast',
+    #     'network': sys.path[0]+r"/../Graphs/Yeast/edges.txt",
+    #     'clusters': sys.path[0]+r"/../Graphs/Yeast/clusters.txt"
+    # },
+    # {
+    #     'name': 'Arabidopsis',
+    #     'network': sys.path[0]+r"/../Graphs/Arabidopsis/edges.txt",
+    #     'clusters': sys.path[0]+r"/../Graphs/Arabidopsis/clusters.txt"
+    # },
     {
         'name': 'ca-CondMat',
         'network': sys.path[0]+r"/../Graphs/ca-CondMat.txt",
@@ -127,7 +127,7 @@ def main():
     for network in netwroks_to_test:
         real_comms = get_comm_dic(network['clusters'])
         G = nx.read_edgelist(network['network'], delimiter='\t')
-        for method in ['Louvain', 'YSLouvain']:
+        for method in ['YSGN_mod']:
             run_test(network, method, G, real_comms)
             #task = executor.submit(run_test, network, method, G, real_comms) # does not block
             # print("starting thread: "+str(counter))
