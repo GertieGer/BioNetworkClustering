@@ -1,9 +1,9 @@
 
-The Yemmenite Step Method Python Project
+The Yemenite Step Method Python Project
 ==============================
 
-This module implements community detection using the Yemmenite Step Method.
-The Yemmenite Step Method implements the Louvain method [#f1]_ , with an additional step where in each Louvain iteration, each community is clustered again using a separate algorithm (reffered to here as "splitting function").
+This module implements community detection using the Yemenite Step Method.
+The Yemenite Step Method implements the Louvain method [#f1]_ , with an additional step where in each Louvain iteration, each community is clustered again using a separate algorithm (reffered to here as "splitting function").
 
 | We offer these options for the inner splitting functions
 1. Louvain
