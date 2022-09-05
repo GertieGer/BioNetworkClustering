@@ -80,9 +80,9 @@ You can read the files in "Test Files", that were used for personal testing, but
     If True, relative option will be used.
     only "Louvain" and "GN-modularity" support this option.
 
-###### Returns:
-    A list of sets (partition of G). 
-    Each set represents one community and contains all the nodes that constitute it.
+##### Returns:
+A list of sets (partition of G). 
+Each set represents one community and contains all the nodes that constitute it.
 
 ### Examples
 -----
