@@ -3,7 +3,7 @@ The Yemmenite Step Method Python Project
 ==============================
 
 This module implements community detection using the Yemmenite Step Method.
-The Yemmenite Step Method implements the Louvain method[#]_ , with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
+The Yemmenite Step Method implements the Louvain method [#f1]_ , with an additional step of running an additional clustering algorithm (reffered to here as splitting functions) on each community Louvaine finds, at each iteration (just before generating the new coarse graph).
 
 | We offer these options for the inner splitting functions
 1. Louvain
@@ -36,17 +36,15 @@ Requirements
 
 Getting Started
 -----
-| Clone the repository::
-| 
+Clone the repository::
 
     git clone https://github.com/GertieGer/BioNetworkClustering.git
     cd BioNetworkClustering
 
-| Install the package using::
-| 
+Install the package using::
+
     sudo python3 setup.py build
     sudo python3 setup.py install
-
 
 Usage
 -----
@@ -100,6 +98,4 @@ Each list represents one community and contains all the nodes that constitute it
 References
 ----------
 
-.. [#] Blondel V.D., Guillaume J.-L., Lambiotte R., Lefebvre E. (2008) Fast
-   unfolding of communities in large networks. J. Stat. Mech. P10008
-   (https://arxiv.org/abs/0803.0476)
+.. [#f1] Blondel V.D., Guillaume J.-L., Lambiotte R., Lefebvre E. (2008) Fast unfolding of communities in large networks. J. Stat. Mech. P10008 (https://arxiv.org/abs/0803.0476)
