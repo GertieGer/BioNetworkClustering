@@ -49,7 +49,7 @@ sudo python3 setup.py install
 
 ### Usage
 -----
-After Insatlling, you can import the package, and use on a NetworkX graph:
+After Insatlling, you can import the package and call ys.get_communities() function:
 ```
 import yemenitestep.yemenitestep as ys
 import networkx as nx
@@ -65,7 +65,7 @@ python3 YemeniteStepExample.py
 Or Edit it to run different methods on any network you wish.
 You can read the files in "Test Files", that were used for personal testing, but have examples on how to evaluate the methods using the evaluation methods in evaluation.py file.
 
-#### Parameters:
+#### get_communities Parameters:
 * **G**: *NetworkX graph*<br />
 * **splitting_func**: *string, function, or None*__
     Use one of the strings from the list of splitting functions above,
