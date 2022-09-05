@@ -63,6 +63,7 @@ You can Try running the example file from terminal:
 python3 YemeniteStepExample.py
 ```
 Or Edit it to run different methods on any network you wish.
+You can read the files in "Test Files", that were used for personal testing, but have examples on how to evaluate the methods using the evaluation methods in evaluation.py file.
 
 ###### Parameters:
 * **G**: *NetworkX graph*<br />
