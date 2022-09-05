@@ -1,5 +1,5 @@
 
-# The Yemmenite Step Method Python Project
+The Yemmenite Step Method Python Project
 ==============================
 
 This module implements community detection using the Yemmenite Step Method.<br />
