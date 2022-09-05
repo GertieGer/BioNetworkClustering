@@ -88,9 +88,17 @@ A list of list (partition of G).
 Each list represents one community and contains all the nodes that constitute it.
 
 
+Credits
+----------
+Using some code from:
+Copyright (c) 2017 Timothy Leung: https://github.com/tzyl/louvain-communities/
+Copyright 2018 Zhiya Zuo: https://github.com/zhiyzuo/python-modularity-maximization
+
 References
 ----------
 
 .. [#f1] Blondel V.D., Guillaume J.-L., Lambiotte R., Lefebvre E. (2008) Fast unfolding of communities in large networks. J. Stat. Mech. P10008 (https://arxiv.org/abs/0803.0476)
+
 .. [#f2] Girvan M. and Newman M. E. J., Community structure in social and biological networks, Proc. Natl. Acad. Sci. USA 99, 7821–7826 (2002)
+
 .. [#f3] Modularity and Community Structure in Networks M.E.J Newman, PNAS 2006
