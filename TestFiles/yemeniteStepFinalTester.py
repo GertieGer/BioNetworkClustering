@@ -144,7 +144,7 @@ def main():
         else:
             real_comms = get_comm_dic(network['clusters'])
         G = nx.read_edgelist(network['network'], delimiter='\t')
-        for method in ['YSLouvain','Louvain']:
+        for method in ['Louvain']:
             run_test(network, method, G, real_comms)
             #task = executor.submit(run_test, network, method, G, real_comms) # does not block
             # print("starting thread: "+str(counter))
