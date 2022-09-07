@@ -70,44 +70,54 @@ def arr_to_dic(arr):
 def intersection_size(a, b):
     return len(set(a).intersection(set(b)))
 
-def sensitivity(known_communities, candidate_communities):
+def accuracy(annotated_complexes, candidate_clusters):
+    """
+    Using notations from "Evaluation of clustering algorithms for protein-protein interaction networks, Brohee & van Helden, BMC Bioinformatics, 2006".
+    """
+    ppv = PPV(annotated_complexes, candidate_clusters)
+    sn = sensitivity(annotated_complexes, candidate_clusters)
+    return math.sqrt(sn*ppv)
+
+def sensitivity(annotated_complexes, candidate_clusters):
     sum_of_max_intersections = 0
     sum_of_all_lens = 0
     
-    for knwon_community in known_communities:
-        max_int_with_cand = 0
-        for candidate_community in candidate_communities:
-            int_size = intersection_size(knwon_community, candidate_community)
-            max_int_with_cand = max(int_size, max_int_with_cand)
+    # for each complex, 
+    for annotated_complex in annotated_complexes:
+        max_int_with_complex = 0
+        # find best matching cluster
+        for candidate_cluster in candidate_clusters:
+            int_size = intersection_size(annotated_complex, candidate_cluster)
+            max_int_with_complex = max(int_size, max_int_with_complex)
 
-        sum_of_max_intersections += max_int_with_cand
-        sum_of_all_lens += len(knwon_community)
+        sum_of_max_intersections += max_int_with_complex
+        sum_of_all_lens += len(annotated_complex) # Ni
 
     if sum_of_all_lens>0:
         return sum_of_max_intersections/sum_of_all_lens
     return 0
 
-def PPV(known_communities, candidate_communities):
+def PPV(annotated_complexes, candidate_clusters):
     sum_of_max_intersections = 0
-    sum_of_all_intersections = 0
+    sum_of_all_intersections = 0 # sum_i(T_.j)
     
-    for candidate_community in candidate_communities:
-        max_int_with_known = 0
-        for knwon_community in known_communities:
-            int_size = intersection_size(knwon_community, candidate_community)
+    # for each cluster
+    for candidate_cluster in candidate_clusters:
+        max_int_with_cluster = 0
+        # find best matching complex
+        for annotated_complex in annotated_complexes:
+            # and also calculate "T_.j", which is the sum of Tij for all i (where j is the cluster and i is a complex)
+            int_size = intersection_size(annotated_complex, candidate_cluster)
             sum_of_all_intersections += int_size
 
-            max_int_with_known = max(int_size, max_int_with_known)
-        sum_of_max_intersections += max_int_with_known
+            max_int_with_cluster = max(int_size, max_int_with_cluster)
+        sum_of_max_intersections += max_int_with_cluster
             
     if sum_of_all_intersections>0:
         return sum_of_max_intersections/sum_of_all_intersections
     return 0
 
-def accuracy(known_communities, candidate_communities):
-    ppv = PPV(known_communities, candidate_communities)
-    sn = sensitivity(known_communities, candidate_communities)
-    return math.sqrt(sn*ppv)
+
 
 
 
