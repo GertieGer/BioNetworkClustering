@@ -47,6 +47,8 @@ netwroks_to_test = [
 
 def write_result(f, name, method, time_, comms, Y, X, G) :
     print("writing results")
+    for comm in comms:
+        f.write(str(comm))
     modularity = str(evaluation.modularity(G, comms))
     f.write(f"{name},{method},{time_},{modularity},")
     cunductance = str(evaluation.conductance(G, comms))
@@ -120,8 +122,8 @@ def run_test(network, method, G, real_comms):
         for trace in trace_back:
             stack_trace.append("File : %s , Line : %d, Func.Name : %s, Message : %s" % (trace[0], trace[1], trace[2], trace[3]))
 
-        print(method+"on"+network+" FAILED")
-        f.write(network+","+"ERROR")
+        print(method+"on"+network['name']+" FAILED")
+        f.write(network['name']+","+"ERROR")
         f.write("Exception type : %s " % ex_type.__name__)
         f.write("Exception message : %s" %ex_value)
         f.write("Stack trace : %s" %stack_trace)
@@ -144,7 +146,7 @@ def main():
         else:
             real_comms = get_comm_dic(network['clusters'])
         G = nx.read_edgelist(network['network'], delimiter='\t')
-        for method in ['Louvain']:
+        for method in ['YSLouvain','Louvain']:
             run_test(network, method, G, real_comms)
             #task = executor.submit(run_test, network, method, G, real_comms) # does not block
             # print("starting thread: "+str(counter))
