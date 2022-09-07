@@ -48,9 +48,11 @@ netwroks_to_test = [
 def write_result(f, name, method, time_, comms, Y, X, G) :
     print("writing results")
     modularity = str(evaluation.modularity(G, comms))
+    f.write(f"{name},{method},{time_},{modularity},")
     cunductance = str(evaluation.conductance(G, comms))
+    f.write(f"{cunductance},")
     accuracy = str(evaluation.accuracy(X, Y)) if X else "NA"
-    f.write(f"{name},{method},{time_},{modularity},{cunductance},{accuracy}")
+    f.write(f"{accuracy}")
     f.write("\n")
 
 
@@ -100,7 +102,7 @@ def run_test(network, method, G, real_comms):
         if method == 'YSLouvain':
             comms = ys.get_communities(G, "Louvain", randomized=False, remerge=False ,relative=False, verbose=True)
         if method == 'Louvain':
-            comms = nx_comm.louvain_communities(G)
+            comms = ys.get_communities(G, None, randomized=False, remerge=False ,relative=False, verbose=True)
         if method == 'Newman':
             return
 
