@@ -3,15 +3,21 @@ import networkx as nx
 from itertools import product
 import math
 
-# Modularity ## TODO: Delete, useless
-def modularity(G,arr):
-    m=nx_comm.modularity(G,arr) 
+def modularity(G,clusters):
+    """ 
+    calculates modularity of a clustering "clusters" og graph "G"
+    """
+    m=nx_comm.modularity(G,clusters) 
     return m
 
 # Modularity
-def relative_modularity(G, partition, m, k):
+def relative_modularity(G, clusters, m, k):
+    """ 
+    calculates modularity of a clustering "clusters" og graph "G", 
+    using a given "m" and dict "k". this is used when using the "Relative" option.
+    """
     Q = 0
-    for community in partition:
+    for community in clusters:
         for u, v in product(community, repeat=2):
             try:
                 w = G[u][v].get("weight", 1)
@@ -24,19 +30,27 @@ def relative_modularity(G, partition, m, k):
     return Q / (2 * m)
 
 # Conductance
-def conductance(G,arr):
+def conductance(G,clusters):
+    """ 
+    calculates modularity of a clustering "clusters" og graph "G"
+    """
     q=0
-    for A in arr:
-        #T=arr.pop(A)
+    for A in clusters:
         T=G.nodes()-A
         q+=nx.conductance(G,A,T)
-    res=q/len(arr)
+    res=q/len(clusters)
     res=1-res
     return res
 
 # Jaccard
-def jaccard(X, Y):
-    """ X - known solution, Y - suggested"""
+def jaccard(known_comms, suggested_comms):
+    """ calculates jaccard accuray """
+    X = known_comms
+    Y = suggested_comms
+
+    if not isinstance(X,dict):  X = arr_to_dic(X)
+    if not isinstance(Y,dict):  Y = arr_to_dic(Y)
+
     N11 = 0 # same cluster in both
     N00 = 0 # diff cluster in both
     N10 = 0 # same in X diff in Y
@@ -61,13 +75,20 @@ def jaccard(X, Y):
     return N11/(N10+N01+N11)
 
 def arr_to_dic(arr):
+    """
+        Input: communities in list of lists
+        Output: dict of {node:community}
+    """
     d={}
-    for i, com in enumerate(arr):
-        for node in com:
+    for i, comm in enumerate(arr):
+        for node in comm:
             d[node]=i
     return d
 
 def intersection_size(a, b):
+    """
+        Calculates intersection_size of to lists
+    """
     return len(set(a).intersection(set(b)))
 
 def accuracy(annotated_complexes, candidate_clusters):
