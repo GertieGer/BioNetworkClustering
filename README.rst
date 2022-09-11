@@ -56,6 +56,13 @@ After Insatlling, you can import the package and call ys.get_communities() funct
     G = nx.karate_club_graph()
     partition =  ys.get_communities(G, splitting_func="GN_modularity", relative=True)
     >> [[0, 1, 2, 3, 7, 11, 12, 13, 17, 19, 21], [4, 5, 6, 10, 16], [8, 9, 14, 15, 18, 20, 22, 26, 29, 30, 32, 33], [23, 24, 25, 27, 28, 31]]
+    
+    # Evaluate the clustering
+    from yemenitestep import evaluation
+    modularity = evaluation.modularity(G, communities)
+    conductance = evaluation.conductance(G, communities)
+    jaccard = evaluation.jaccard(real_communities, communities) # can also get community dicts as input
+    accuracy = evaluation.accuracy(annotated_complexes, communities)
 
 You can try running the example file from terminal::
 
