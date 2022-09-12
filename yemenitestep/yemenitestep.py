@@ -7,6 +7,10 @@ MIN_LEN = 10
 CONSTANT_MIN_LEN = True
 
 class Louvain: 
+    """
+        This is the outer warping class for Yemenite Step, that implements Louvain.
+        it recieves a splitting function, and boolean flags for adittional options.
+    """
 
     def __init__(self, G, splitting_func=None, verbose=False, randomized=False, remerge=False, relative=False):
         # SETTINGS
@@ -356,6 +360,7 @@ class Louvain:
 
 def get_communities(G, splitting_func=None, verbose=False, randomized=False, remerge=False, relative=False):
     """
+        Graph ==> list of lists describing communities
         The YemmeniteStep method:
         
         This methods implements the Louvain method, with an additional step of running 
@@ -413,17 +418,6 @@ def get_communities(G, splitting_func=None, verbose=False, randomized=False, rem
         print(f'Finished in {iters} iterations')
 
     return louvain.communities
-
-# def detect_communities(G, verbose=False, randomized=False, splitting_func=None, remerge=False):
-#     """Returns the detected communities as a list of lists of nodes
-#     representing each community.
-#     Uses the Louvain heuristic from:
-#         Blondel, V.D. et al. Fast unfolding of communities in
-#     large networks. J. Stat. Mech 10008, 1 - 12(2008).
-#     """
-#     louvain = Louvain(G, verbose=verbose, randomized=randomized, splitting_func=splitting_func, remerge=remerge)
-#     louvain.run()
-#     return louvain.communities, louvain.community_map
 
 def louvainfunc(G, verbose=False, randomized=False, splitting_func=None, remerge=False):
     louvain = Louvain(G, verbose=False, randomized=False, splitting_func=None, remerge=False)
