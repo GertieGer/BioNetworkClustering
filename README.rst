@@ -43,6 +43,8 @@ Install the package using::
 
     sudo python3 setup.py build
     sudo python3 setup.py install
+    # Try running our example file:
+    python3 YemeniteStepExample.py
 
 Usage
 -----
