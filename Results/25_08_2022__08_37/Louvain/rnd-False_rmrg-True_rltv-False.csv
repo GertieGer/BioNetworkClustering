@@ -1,0 +1,2 @@
+i,size,mu,method,random,remerge,relative,time,modularity,conductance,jaccard
+0,1000,0.4,Louvain,False,True,False,17.0192813873291,0.2491603083757821,0.24485613601428113,0.245804774285039

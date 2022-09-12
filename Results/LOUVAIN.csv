@@ -1,0 +1,28 @@
+%?	%?					
+						
+Louvain				Louvain		
+	diff				diff	
+Modularity 	-0.010542979	-0.01%?		Modularity 	-0.017545398	-0.02%?
+Conductance	-0.010209145	-0.01%?		Conductance	-0.074696402	-0.07%?
+Jaccard	-0.276374863	-0.28%?		Jaccard	1.414902919	1.41%?
+						
+						
+						
+						
+						
+						
+						
+Adding Random Option	1000	10000				
+Modularity 	-0.06%?	-0.01%?				
+Conductance	-0.05%?	-0.01%?				
+Jaccard	0.04%?	-0.07%?				
+						
+Adding Remerge Option	1000	10000				
+Modularity 	-11.12%?	-0.02%?				
+Conductance	-11.65%?	-0.07%?				
+Jaccard	-16.16%?	1.41%?				
+						
+Adding Relative Option	1000	10000				
+Modularity 	-0.01%?	0%?				
+Conductance	-0.01%?	-0.04%?				
+Jaccard	-0.28%?	0.59%?				

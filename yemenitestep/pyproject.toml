@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[project]
+name = "yemenitestep"
+version = "0.0.1"
+authors = [
+  { name="Talya Sapir"},
+]
+description = "A Python implementation of the Yemenite Step method"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/pypa/sampleprojecthttps://github.com/GertieGer/BioNetworkClustering.git"
