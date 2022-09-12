@@ -111,8 +111,9 @@ def run_test(network, method, G, real_comms):
         end = time.time()
         time_ = str(end - start)
         dic = make_comm_dic(comms)
-        f = open(out_file, "w")
-        write_result(f, network['name'], method, time_, comms, dic, real_comms, G)
+        print(time_)
+        #f = open(out_file, "w")
+        #write_result(f, network['name'], method, time_, comms, dic, real_comms, G)
 
     except BaseException as ex:
         
